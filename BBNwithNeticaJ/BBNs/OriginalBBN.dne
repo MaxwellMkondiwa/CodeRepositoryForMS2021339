@@ -1,0 +1,1345 @@
+// ~->[DNET-1]->~
+
+// File created by an unlicensed user using Netica 5.24 on May 15, 2017 at 08:02:02 UTC.
+
+bnet newMyBBN14052017 {
+AutoCompile = TRUE;
+autoupdate = TRUE;
+whenchanged = 1494835308;
+
+visual V3 {
+	defdispform = BELIEFBARS;
+	nodelabeling = TITLE;
+	NodeMaxNumEntries = 50;
+	nodefont = font {shape= "Arial"; size= 9;};
+	linkfont = font {shape= "Arial"; size= 9;};
+	ShowLinkStrengths = 1;
+	windowposn = (166, 48, 1675, 908);
+	resolution = 72;
+	drawingbounds = (2687, 1435);
+	showpagebreaks = FALSE;
+	usegrid = TRUE;
+	gridspace = (6, 6);
+	NodeSet Node {BuiltIn = 1; Color = 0x00008000;};
+	NodeSet Nature {BuiltIn = 1; Color = 0x00f8eed2;};
+	NodeSet Deterministic {BuiltIn = 1; Color = 0x00d3caa6;};
+	NodeSet Finding {BuiltIn = 1; Color = 0x00c8c8c8;};
+	NodeSet Constant {BuiltIn = 1; Color = 0x00ffffff;};
+	NodeSet ConstantValue {BuiltIn = 1; Color = 0x00ffffb4;};
+	NodeSet Utility {BuiltIn = 1; Color = 0x00ffbdbd;};
+	NodeSet Decision {BuiltIn = 1; Color = 0x00dee8ff;};
+	NodeSet Documentation {BuiltIn = 1; Color = 0x00f0fafa;};
+	NodeSet Title {BuiltIn = 1; Color = 0x00ffffff;};
+	NodeSet farmersdecisions {Color = 0x0000a200;};
+	PrinterSetting A {
+		margins = (1270, 1270, 1270, 1270);
+		};
+	};
+
+node householdSize {
+	kind = NATURE;
+	discrete = FALSE;
+	chance = CHANCE;
+	levels = (1, 4, 7, 11);
+	parents = ();
+	probs = 
+		// 1 to 4       4 to 7       7 to 11      
+		  (0.23,        0.5666667,   0.2033333);
+	numcases = 300;
+	title = "SizeOfHousehold";
+	whenchanged = 1494835308;
+	belief = (0.23, 0.5666667, 0.2033333);
+	visual V3 {
+		center = (468, 90);
+		height = 10;
+		};
+	};
+
+node farmSize {
+	kind = NATURE;
+	discrete = FALSE;
+	chance = CHANCE;
+	levels = (0, 3, 6, 9, 21.5);
+	parents = ();
+	probs = 
+		// 0 to 3       3 to 6       6 to 9       9 to 21.5    
+		  (0.7242525,   0.1760797,   0.05980067,  0.03986711);
+	numcases = 301;
+	title = "SizeOfCropLand";
+	whenchanged = 1494835308;
+	belief = (0.7242525, 0.1760797, 0.05980066, 0.03986711);
+	visual V3 {
+		center = (774, 90);
+		height = 9;
+		};
+	};
+
+node wardCode {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (s101, s121, s131, s61, s241, s23, s83, s11, s91);
+	statetitles = ("101", "121", "131", "61", "241", "23", "83", "11", "91");
+	parents = ();
+	probs = 
+		// 101          121          131          61           241          23           83           11           91           
+		  (0.1437909,   0.09803922,  0.04901961,  0.09803922,  0.0751634,   0.1568628,   0.130719,    0.1862745,   0.0620915);
+	numcases = 306;
+	whenchanged = 1494835308;
+	belief = (0.1437909, 0.09803921, 0.0490196, 0.09803921, 0.0751634, 0.1568628, 0.130719, 0.1862745, 0.0620915);
+	visual V3 {
+		center = (1248, 264);
+		height = 8;
+		};
+	};
+
+node distanceToBigMarket {
+	kind = NATURE;
+	discrete = FALSE;
+	chance = CHANCE;
+	levels = (1, 14, 24, 64);
+	parents = (wardCode);
+	probs = 
+		// 1 to 14      14 to 24     24 to 64      // wardCode 
+		  (0.04347826,  0.6086956,   0.3478261,    // 101      
+		   0.03125,     0.03125,     0.9375,       // 121      
+		   0.05882353,  0.05882353,  0.8823529,    // 131      
+		   0.03125,     0.78125,     0.1875,       // 61       
+		   0.04,        0.04,        0.92,         // 241      
+		   0.02,        0.66,        0.32,         // 23       
+		   0.9285714,   0.02380952,  0.04761905,   // 83       
+		   0.7288136,   0.2542373,   0.01694915,   // 11       
+		   0.9047619,   0.04761905,  0.04761905);  // 91       ;
+	numcases = 
+		                 // wardCode 
+		  (46,           // 101      
+		   32,           // 121      
+		   17,           // 131      
+		   32,           // 61       
+		   25,           // 241      
+		   50,           // 23       
+		   42,           // 83       
+		   59,           // 11       
+		   21);          // 91       ;
+	title = "DistanceToBigMarket";
+	whenchanged = 1494835308;
+	belief = (0.3347258, 0.3300282, 0.335246);
+	visual V3 {
+		center = (1230, 72);
+		height = 1;
+		};
+	};
+
+node commercializationIndex {
+	kind = NATURE;
+	discrete = FALSE;
+	chance = CHANCE;
+	levels = (0, 30, 60, 100);
+	parents = (distanceToBigMarket, farmSize);
+	probs = 
+		// 0 to 30      30 to 60     60 to 100     // distanceToBigMarket farmSize  
+		  (0.2637363,   0.3626374,   0.3736264,    // 1 to 14             0 to 3    
+		   0.3636364,   0.2727273,   0.3636364,    // 1 to 14             3 to 6    
+		   0.5,         0.25,        0.25,         // 1 to 14             6 to 9    
+		   0.4,         0.4,         0.2,          // 1 to 14             9 to 21.5 
+		   0.1363636,   0.5,         0.3636364,    // 14 to 24            0 to 3    
+		   0.2,         0.4,         0.4,          // 14 to 24            3 to 6    
+		   0.5,         0.25,        0.25,         // 14 to 24            6 to 9    
+		   0.2,         0.4,         0.4,          // 14 to 24            9 to 21.5 
+		   0.2173913,   0.4637681,   0.3188406,    // 24 to 64            0 to 3    
+		   0.5,         0.35,        0.15,         // 24 to 64            3 to 6    
+		   0.4285714,   0.3571429,   0.2142857,    // 24 to 64            6 to 9    
+		   0.4,         0.3,         0.3);         // 24 to 64            9 to 21.5 ;
+	numcases = 
+		                 // distanceToBigMarket farmSize  
+		  (91,           // 1 to 14             0 to 3    
+		   11,           // 1 to 14             3 to 6    
+		   4,            // 1 to 14             6 to 9    
+		   5,            // 1 to 14             9 to 21.5 
+		   66,           // 14 to 24            0 to 3    
+		   30,           // 14 to 24            3 to 6    
+		   8,            // 14 to 24            6 to 9    
+		   5,            // 14 to 24            9 to 21.5 
+		   69,           // 24 to 64            0 to 3    
+		   20,           // 24 to 64            3 to 6    
+		   14,           // 24 to 64            6 to 9    
+		   10);          // 24 to 64            9 to 21.5 ;
+	title = "CommercializationIndex";
+	whenchanged = 1494835308;
+	belief = (0.2536671, 0.4117163, 0.3346166);
+	visual V3 {
+		center = (1050, 258);
+		height = 7;
+		link 1 {
+			path = ((1189, 116), (1092, 215));
+			};
+		link 2 {
+			path = ((853, 141), (936, 192), (976, 215));
+			};
+		};
+	};
+
+node farmType {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Subsistence, Diversifier, AgroPastoralist);
+	parents = (householdSize, farmSize, commercializationIndex);
+	probs = 
+		// Subsistence  Diversifier  AgroPastoralist  // householdSize farmSize  commercializationIndex 
+		  (0.5,         0.4375,      0.0625,       // 1 to 4        0 to 3    0 to 30                
+		   0.75,        0.2142857,   0.03571429,   // 1 to 4        0 to 3    30 to 60               
+		   0.6153846,   0.3461539,   0.03846154,   // 1 to 4        0 to 3    60 to 100              
+		   0.4,         0.4,         0.2,          // 1 to 4        3 to 6    0 to 30                
+		   0.25,        0.5,         0.25,         // 1 to 4        3 to 6    30 to 60               
+		   0.4,         0.4,         0.2,          // 1 to 4        3 to 6    60 to 100              
+		   0.3333333,   0.3333333,   0.3333333,    // 1 to 4        6 to 9    0 to 30                
+		   0.3333333,   0.3333333,   0.3333333,    // 1 to 4        6 to 9    30 to 60               
+		   0.3333333,   0.3333333,   0.3333333,    // 1 to 4        6 to 9    60 to 100              
+		   0.4,         0.4,         0.2,          // 1 to 4        9 to 21.5 0 to 30                
+		   0.3333333,   0.3333333,   0.3333333,    // 1 to 4        9 to 21.5 30 to 60               
+		   0.3333333,   0.3333333,   0.3333333,    // 1 to 4        9 to 21.5 60 to 100              
+		   0.6296296,   0.3333333,   0.03703704,   // 4 to 7        0 to 3    0 to 30                
+		   0.6774194,   0.3064516,   0.01612903,   // 4 to 7        0 to 3    30 to 60               
+		   0.7708333,   0.2083333,   0.02083333,   // 4 to 7        0 to 3    60 to 100              
+		   0.6666667,   0.1666667,   0.1666667,    // 4 to 7        3 to 6    0 to 30                
+		   0.7058824,   0.2352941,   0.05882353,   // 4 to 7        3 to 6    30 to 60               
+		   0.75,        0.1666667,   0.08333334,   // 4 to 7        3 to 6    60 to 100              
+		   0.3333333,   0.5,         0.1666667,    // 4 to 7        6 to 9    0 to 30                
+		   0.3333333,   0.3333333,   0.3333333,    // 4 to 7        6 to 9    30 to 60               
+		   0.25,        0.5,         0.25,         // 4 to 7        6 to 9    60 to 100              
+		   0.25,        0.25,        0.5,          // 4 to 7        9 to 21.5 0 to 30                
+		   0.25,        0.25,        0.5,          // 4 to 7        9 to 21.5 30 to 60               
+		   0.3333333,   0.3333333,   0.3333333,    // 4 to 7        9 to 21.5 60 to 100              
+		   0.5454546,   0.3636364,   0.09090909,   // 7 to 11       0 to 3    0 to 30                
+		   0.7857143,   0.1428571,   0.07142857,   // 7 to 11       0 to 3    30 to 60               
+		   0.5833333,   0.3333333,   0.08333334,   // 7 to 11       0 to 3    60 to 100              
+		   0.3333333,   0.4444444,   0.2222222,    // 7 to 11       3 to 6    0 to 30                
+		   0.4285714,   0.4285714,   0.1428571,    // 7 to 11       3 to 6    30 to 60               
+		   0.625,       0.25,        0.125,        // 7 to 11       3 to 6    60 to 100              
+		   0.1111111,   0.2222222,   0.6666667,    // 7 to 11       6 to 9    0 to 30                
+		   0.2,         0.2,         0.6,          // 7 to 11       6 to 9    30 to 60               
+		   0.2,         0.2,         0.6,          // 7 to 11       6 to 9    60 to 100              
+		   0.25,        0.25,        0.5,          // 7 to 11       9 to 21.5 0 to 30                
+		   0.1666667,   0.1666667,   0.6666667,    // 7 to 11       9 to 21.5 30 to 60               
+		   0.1666667,   0.1666667,   0.6666667);   // 7 to 11       9 to 21.5 60 to 100              ;
+	numcases = 
+		                 // householdSize farmSize  commercializationIndex 
+		  (16,           // 1 to 4        0 to 3    0 to 30                
+		   28,           // 1 to 4        0 to 3    30 to 60               
+		   26,           // 1 to 4        0 to 3    60 to 100              
+		   5,            // 1 to 4        3 to 6    0 to 30                
+		   4,            // 1 to 4        3 to 6    30 to 60               
+		   5,            // 1 to 4        3 to 6    60 to 100              
+		   3,            // 1 to 4        6 to 9    0 to 30                
+		   3,            // 1 to 4        6 to 9    30 to 60               
+		   3,            // 1 to 4        6 to 9    60 to 100              
+		   5,            // 1 to 4        9 to 21.5 0 to 30                
+		   3,            // 1 to 4        9 to 21.5 30 to 60               
+		   3,            // 1 to 4        9 to 21.5 60 to 100              
+		   27,           // 4 to 7        0 to 3    0 to 30                
+		   62,           // 4 to 7        0 to 3    30 to 60               
+		   48,           // 4 to 7        0 to 3    60 to 100              
+		   12,           // 4 to 7        3 to 6    0 to 30                
+		   17,           // 4 to 7        3 to 6    30 to 60               
+		   12,           // 4 to 7        3 to 6    60 to 100              
+		   6,            // 4 to 7        6 to 9    0 to 30                
+		   6,            // 4 to 7        6 to 9    30 to 60               
+		   4,            // 4 to 7        6 to 9    60 to 100              
+		   4,            // 4 to 7        9 to 21.5 0 to 30                
+		   4,            // 4 to 7        9 to 21.5 30 to 60               
+		   3,            // 4 to 7        9 to 21.5 60 to 100              
+		   11,           // 7 to 11       0 to 3    0 to 30                
+		   14,           // 7 to 11       0 to 3    30 to 60               
+		   12,           // 7 to 11       0 to 3    60 to 100              
+		   9,            // 7 to 11       3 to 6    0 to 30                
+		   7,            // 7 to 11       3 to 6    30 to 60               
+		   8,            // 7 to 11       3 to 6    60 to 100              
+		   9,            // 7 to 11       6 to 9    0 to 30                
+		   5,            // 7 to 11       6 to 9    30 to 60               
+		   5,            // 7 to 11       6 to 9    60 to 100              
+		   4,            // 7 to 11       9 to 21.5 0 to 30                
+		   6,            // 7 to 11       9 to 21.5 30 to 60               
+		   6);           // 7 to 11       9 to 21.5 60 to 100              ;
+	title = "FarmerType";
+	whenchanged = 1494835308;
+	belief = (0.6228039, 0.2862444, 0.09095175);
+	visual V3 {
+		center = (666, 258);
+		height = 14;
+		link 1 {
+			path = ((518, 134), (627, 225));
+			};
+		};
+	};
+
+node totalLaborManDays {
+	kind = NATURE;
+	discrete = FALSE;
+	chance = CHANCE;
+	levels = (10, 120, 220, 400, 2760);
+	parents = (householdSize);
+	probs = 
+		// 10 to 120    120 to 220   220 to 400   400 to 2760   // householdSize 
+		  (0.2083333,   0.2083333,   0.2361111,   0.3472222,    // 1 to 4        
+		   0.2196532,   0.283237,    0.2543353,   0.2427746,    // 4 to 7        
+		   0.3125,      0.28125,     0.21875,     0.1875);      // 7 to 11       ;
+	numcases = 
+		                 // householdSize 
+		  (72,           // 1 to 4        
+		   173,          // 4 to 7        
+		   64);          // 7 to 11       ;
+	title = "LabourInManDays";
+	whenchanged = 1494835308;
+	belief = (0.2359285, 0.2656052, 0.242908, 0.2555584);
+	visual V3 {
+		center = (126, 306);
+		height = 2;
+		link 1 {
+			path = ((400, 134), (204, 256));
+			};
+		};
+	};
+
+node shareOfHiredLabour {
+	kind = NATURE;
+	discrete = FALSE;
+	chance = CHANCE;
+	levels = (0, 10, 60, 100);
+	parents = (householdSize);
+	probs = 
+		// 0 to 10      10 to 60     60 to 100     // householdSize 
+		  (0.3239437,   0.3380282,   0.3380282,    // 1 to 4        
+		   0.3488372,   0.3255814,   0.3255814,    // 4 to 7        
+		   0.4285714,   0.3809524,   0.1904762);   // 7 to 11       ;
+	numcases = 
+		                 // householdSize 
+		  (71,           // 1 to 4        
+		   172,          // 4 to 7        
+		   63);          // 7 to 11       ;
+	title = "ShareOfHiredLabour";
+	whenchanged = 1494835308;
+	belief = (0.3593243, 0.3397029, 0.3009728);
+	visual V3 {
+		center = (378, 252);
+		height = 3;
+		link 1 {
+			path = ((445, 134), (402, 209));
+			};
+		};
+	};
+
+node percentNonfarmIncome {
+	kind = NATURE;
+	discrete = FALSE;
+	chance = CHANCE;
+	states = (None, LessThan30Perc, MoreThan30Perc);
+	levels = (0, 0, 30, 92);
+	parents = ();
+	probs = 
+		// None         LessThan30Perc MoreThan30Perc 
+		  (0.72,        0.17,        0.11);
+	numcases = 300;
+	title = "PercentOfNonFarmIncome";
+	whenchanged = 1494835308;
+	belief = (0.72, 0.17, 0.11);
+	visual V3 {
+		center = (1266, 438);
+		height = 12;
+		};
+	};
+
+node creditaccess {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (No, Yes);
+	parents = ();
+	probs = 
+		// No           Yes          
+		  (0.6688963,   0.3311037);
+	numcases = 299;
+	whenchanged = 1494835308;
+	belief = (0.6688963, 0.3311037);
+	visual V3 {
+		center = (1266, 594);
+		height = 13;
+		};
+	};
+
+node perCapitaIncome {
+	kind = NATURE;
+	discrete = FALSE;
+	chance = CHANCE;
+	states = (Low, High, veryHigh, Rich);
+	levels = (0, 160000, 280000, 600000, 15800000);
+	parents = (percentNonfarmIncome, commercializationIndex, creditaccess, farmType, farmSize);
+	probs = 
+		// Low          High         veryHigh     Rich          // percentNonfarmIncome commercializationIndex creditaccess farmType        farmSize  
+		  (0.5652174,   0.2608696,   0.1304348,   0.04347826,   // None                 0 to 30                No           Subsistence     0 to 3    
+		   0.2,         0.2,         0.2,         0.4,          // None                 0 to 30                No           Subsistence     3 to 6    
+		   0.2,         0.4,         0.2,         0.2,          // None                 0 to 30                No           Subsistence     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // None                 0 to 30                No           Subsistence     9 to 21.5 
+		   0.4,         0.2,         0.3,         0.1,          // None                 0 to 30                No           Diversifier     0 to 3    
+		   0.5,         0.1666667,   0.1666667,   0.1666667,    // None                 0 to 30                No           Diversifier     3 to 6    
+		   0.2,         0.2,         0.4,         0.2,          // None                 0 to 30                No           Diversifier     6 to 9    
+		   0.2,         0.2,         0.2,         0.4,          // None                 0 to 30                No           Diversifier     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // None                 0 to 30                No           AgroPastoralist 0 to 3    
+		   0.2,         0.2,         0.4,         0.2,          // None                 0 to 30                No           AgroPastoralist 3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // None                 0 to 30                No           AgroPastoralist 6 to 9    
+		   0.2,         0.2,         0.2,         0.4,          // None                 0 to 30                No           AgroPastoralist 9 to 21.5 
+		   0.25,        0.375,       0.25,        0.125,        // None                 0 to 30                Yes          Subsistence     0 to 3    
+		   0.2857143,   0.1428571,   0.2857143,   0.2857143,    // None                 0 to 30                Yes          Subsistence     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // None                 0 to 30                Yes          Subsistence     6 to 9    
+		   0.2,         0.2,         0.2,         0.4,          // None                 0 to 30                Yes          Subsistence     9 to 21.5 
+		   0.4444444,   0.1111111,   0.3333333,   0.1111111,    // None                 0 to 30                Yes          Diversifier     0 to 3    
+		   0.2,         0.2,         0.4,         0.2,          // None                 0 to 30                Yes          Diversifier     3 to 6    
+		   0.2,         0.2,         0.2,         0.4,          // None                 0 to 30                Yes          Diversifier     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // None                 0 to 30                Yes          Diversifier     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // None                 0 to 30                Yes          AgroPastoralist 0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // None                 0 to 30                Yes          AgroPastoralist 3 to 6    
+		   0.2,         0.4,         0.2,         0.2,          // None                 0 to 30                Yes          AgroPastoralist 6 to 9    
+		   0.2,         0.4,         0.2,         0.2,          // None                 0 to 30                Yes          AgroPastoralist 9 to 21.5 
+		   0.3513514,   0.3243243,   0.1351351,   0.1891892,    // None                 30 to 60               No           Subsistence     0 to 3    
+		   0.1111111,   0.1111111,   0.3333333,   0.4444444,    // None                 30 to 60               No           Subsistence     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // None                 30 to 60               No           Subsistence     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // None                 30 to 60               No           Subsistence     9 to 21.5 
+		   0.2105263,   0.368421,    0.2631579,   0.1578947,    // None                 30 to 60               No           Diversifier     0 to 3    
+		   0.2857143,   0.1428571,   0.1428571,   0.4285714,    // None                 30 to 60               No           Diversifier     3 to 6    
+		   0.2,         0.2,         0.2,         0.4,          // None                 30 to 60               No           Diversifier     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // None                 30 to 60               No           Diversifier     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // None                 30 to 60               No           AgroPastoralist 0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // None                 30 to 60               No           AgroPastoralist 3 to 6    
+		   0.1428571,   0.1428571,   0.1428571,   0.5714286,    // None                 30 to 60               No           AgroPastoralist 6 to 9    
+		   0.2,         0.2,         0.4,         0.2,          // None                 30 to 60               No           AgroPastoralist 9 to 21.5 
+		   0.3,         0.2,         0.3,         0.2,          // None                 30 to 60               Yes          Subsistence     0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // None                 30 to 60               Yes          Subsistence     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // None                 30 to 60               Yes          Subsistence     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // None                 30 to 60               Yes          Subsistence     9 to 21.5 
+		   0.3333333,   0.3333333,   0.1666667,   0.1666667,    // None                 30 to 60               Yes          Diversifier     0 to 3    
+		   0.2,         0.4,         0.2,         0.2,          // None                 30 to 60               Yes          Diversifier     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // None                 30 to 60               Yes          Diversifier     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // None                 30 to 60               Yes          Diversifier     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // None                 30 to 60               Yes          AgroPastoralist 0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // None                 30 to 60               Yes          AgroPastoralist 3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // None                 30 to 60               Yes          AgroPastoralist 6 to 9    
+		   0.2,         0.2,         0.2,         0.4,          // None                 30 to 60               Yes          AgroPastoralist 9 to 21.5 
+		   0.3448276,   0.3103448,   0.1724138,   0.1724138,    // None                 60 to 100              No           Subsistence     0 to 3    
+		   0.2,         0.2,         0.4,         0.2,          // None                 60 to 100              No           Subsistence     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // None                 60 to 100              No           Subsistence     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // None                 60 to 100              No           Subsistence     9 to 21.5 
+		   0.1538462,   0.3076923,   0.3076923,   0.2307692,    // None                 60 to 100              No           Diversifier     0 to 3    
+		   0.2,         0.2,         0.2,         0.4,          // None                 60 to 100              No           Diversifier     3 to 6    
+		   0.2,         0.4,         0.2,         0.2,          // None                 60 to 100              No           Diversifier     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // None                 60 to 100              No           Diversifier     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // None                 60 to 100              No           AgroPastoralist 0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // None                 60 to 100              No           AgroPastoralist 3 to 6    
+		   0.2,         0.2,         0.2,         0.4,          // None                 60 to 100              No           AgroPastoralist 6 to 9    
+		   0.1666667,   0.1666667,   0.5,         0.1666667,    // None                 60 to 100              No           AgroPastoralist 9 to 21.5 
+		   0.32,        0.24,        0.36,        0.08,         // None                 60 to 100              Yes          Subsistence     0 to 3    
+		   0.1666667,   0.1666667,   0.1666667,   0.5,          // None                 60 to 100              Yes          Subsistence     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // None                 60 to 100              Yes          Subsistence     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // None                 60 to 100              Yes          Subsistence     9 to 21.5 
+		   0.25,        0.375,       0.125,       0.25,         // None                 60 to 100              Yes          Diversifier     0 to 3    
+		   0.3333333,   0.3333333,   0.1666667,   0.1666667,    // None                 60 to 100              Yes          Diversifier     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // None                 60 to 100              Yes          Diversifier     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // None                 60 to 100              Yes          Diversifier     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // None                 60 to 100              Yes          AgroPastoralist 0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // None                 60 to 100              Yes          AgroPastoralist 3 to 6    
+		   0.2,         0.2,         0.2,         0.4,          // None                 60 to 100              Yes          AgroPastoralist 6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // None                 60 to 100              Yes          AgroPastoralist 9 to 21.5 
+		   0.2,         0.2,         0.4,         0.2,          // LessThan30Perc       0 to 30                No           Subsistence     0 to 3    
+		   0.1428571,   0.1428571,   0.1428571,   0.5714286,    // LessThan30Perc       0 to 30                No           Subsistence     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       0 to 30                No           Subsistence     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       0 to 30                No           Subsistence     9 to 21.5 
+		   0.3333333,   0.1666667,   0.3333333,   0.1666667,    // LessThan30Perc       0 to 30                No           Diversifier     0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       0 to 30                No           Diversifier     3 to 6    
+		   0.2,         0.2,         0.4,         0.2,          // LessThan30Perc       0 to 30                No           Diversifier     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       0 to 30                No           Diversifier     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       0 to 30                No           AgroPastoralist 0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       0 to 30                No           AgroPastoralist 3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       0 to 30                No           AgroPastoralist 6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       0 to 30                No           AgroPastoralist 9 to 21.5 
+		   0.1666667,   0.1666667,   0.3333333,   0.3333333,    // LessThan30Perc       0 to 30                Yes          Subsistence     0 to 3    
+		   0.1666667,   0.1666667,   0.5,         0.1666667,    // LessThan30Perc       0 to 30                Yes          Subsistence     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       0 to 30                Yes          Subsistence     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       0 to 30                Yes          Subsistence     9 to 21.5 
+		   0.1666667,   0.3333333,   0.3333333,   0.1666667,    // LessThan30Perc       0 to 30                Yes          Diversifier     0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       0 to 30                Yes          Diversifier     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       0 to 30                Yes          Diversifier     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       0 to 30                Yes          Diversifier     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       0 to 30                Yes          AgroPastoralist 0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       0 to 30                Yes          AgroPastoralist 3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       0 to 30                Yes          AgroPastoralist 6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       0 to 30                Yes          AgroPastoralist 9 to 21.5 
+		   0.2142857,   0.2142857,   0.3571429,   0.2142857,    // LessThan30Perc       30 to 60               No           Subsistence     0 to 3    
+		   0.1666667,   0.3333333,   0.1666667,   0.3333333,    // LessThan30Perc       30 to 60               No           Subsistence     3 to 6    
+		   0.2,         0.2,         0.2,         0.4,          // LessThan30Perc       30 to 60               No           Subsistence     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       30 to 60               No           Subsistence     9 to 21.5 
+		   0.1111111,   0.3333333,   0.2222222,   0.3333333,    // LessThan30Perc       30 to 60               No           Diversifier     0 to 3    
+		   0.2,         0.2,         0.4,         0.2,          // LessThan30Perc       30 to 60               No           Diversifier     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       30 to 60               No           Diversifier     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       30 to 60               No           Diversifier     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       30 to 60               No           AgroPastoralist 0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       30 to 60               No           AgroPastoralist 3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       30 to 60               No           AgroPastoralist 6 to 9    
+		   0.2,         0.2,         0.2,         0.4,          // LessThan30Perc       30 to 60               No           AgroPastoralist 9 to 21.5 
+		   0.25,        0.375,       0.25,        0.125,        // LessThan30Perc       30 to 60               Yes          Subsistence     0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       30 to 60               Yes          Subsistence     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       30 to 60               Yes          Subsistence     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       30 to 60               Yes          Subsistence     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       30 to 60               Yes          Diversifier     0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       30 to 60               Yes          Diversifier     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       30 to 60               Yes          Diversifier     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       30 to 60               Yes          Diversifier     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       30 to 60               Yes          AgroPastoralist 0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       30 to 60               Yes          AgroPastoralist 3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       30 to 60               Yes          AgroPastoralist 6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       30 to 60               Yes          AgroPastoralist 9 to 21.5 
+		   0.1428571,   0.1428571,   0.2857143,   0.4285714,    // LessThan30Perc       60 to 100              No           Subsistence     0 to 3    
+		   0.1666667,   0.5,         0.1666667,   0.1666667,    // LessThan30Perc       60 to 100              No           Subsistence     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       60 to 100              No           Subsistence     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       60 to 100              No           Subsistence     9 to 21.5 
+		   0.1666667,   0.1666667,   0.1666667,   0.5,          // LessThan30Perc       60 to 100              No           Diversifier     0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       60 to 100              No           Diversifier     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       60 to 100              No           Diversifier     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       60 to 100              No           Diversifier     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       60 to 100              No           AgroPastoralist 0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       60 to 100              No           AgroPastoralist 3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       60 to 100              No           AgroPastoralist 6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       60 to 100              No           AgroPastoralist 9 to 21.5 
+		   0.2,         0.2,         0.2,         0.4,          // LessThan30Perc       60 to 100              Yes          Subsistence     0 to 3    
+		   0.2857143,   0.1428571,   0.2857143,   0.2857143,    // LessThan30Perc       60 to 100              Yes          Subsistence     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       60 to 100              Yes          Subsistence     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       60 to 100              Yes          Subsistence     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       60 to 100              Yes          Diversifier     0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       60 to 100              Yes          Diversifier     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       60 to 100              Yes          Diversifier     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       60 to 100              Yes          Diversifier     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       60 to 100              Yes          AgroPastoralist 0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       60 to 100              Yes          AgroPastoralist 3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // LessThan30Perc       60 to 100              Yes          AgroPastoralist 6 to 9    
+		   0.2,         0.2,         0.2,         0.4,          // LessThan30Perc       60 to 100              Yes          AgroPastoralist 9 to 21.5 
+		   0.2,         0.2,         0.2,         0.4,          // MoreThan30Perc       0 to 30                No           Subsistence     0 to 3    
+		   0.2,         0.4,         0.2,         0.2,          // MoreThan30Perc       0 to 30                No           Subsistence     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       0 to 30                No           Subsistence     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       0 to 30                No           Subsistence     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       0 to 30                No           Diversifier     0 to 3    
+		   0.2,         0.4,         0.2,         0.2,          // MoreThan30Perc       0 to 30                No           Diversifier     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       0 to 30                No           Diversifier     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       0 to 30                No           Diversifier     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       0 to 30                No           AgroPastoralist 0 to 3    
+		   0.2,         0.2,         0.2,         0.4,          // MoreThan30Perc       0 to 30                No           AgroPastoralist 3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       0 to 30                No           AgroPastoralist 6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       0 to 30                No           AgroPastoralist 9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       0 to 30                Yes          Subsistence     0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       0 to 30                Yes          Subsistence     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       0 to 30                Yes          Subsistence     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       0 to 30                Yes          Subsistence     9 to 21.5 
+		   0.4,         0.2,         0.2,         0.2,          // MoreThan30Perc       0 to 30                Yes          Diversifier     0 to 3    
+		   0.4,         0.2,         0.2,         0.2,          // MoreThan30Perc       0 to 30                Yes          Diversifier     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       0 to 30                Yes          Diversifier     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       0 to 30                Yes          Diversifier     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       0 to 30                Yes          AgroPastoralist 0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       0 to 30                Yes          AgroPastoralist 3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       0 to 30                Yes          AgroPastoralist 6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       0 to 30                Yes          AgroPastoralist 9 to 21.5 
+		   0.1,         0.2,         0.4,         0.3,          // MoreThan30Perc       30 to 60               No           Subsistence     0 to 3    
+		   0.1666667,   0.1666667,   0.3333333,   0.3333333,    // MoreThan30Perc       30 to 60               No           Subsistence     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       30 to 60               No           Subsistence     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       30 to 60               No           Subsistence     9 to 21.5 
+		   0.2,         0.2,         0.4,         0.2,          // MoreThan30Perc       30 to 60               No           Diversifier     0 to 3    
+		   0.2,         0.2,         0.2,         0.4,          // MoreThan30Perc       30 to 60               No           Diversifier     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       30 to 60               No           Diversifier     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       30 to 60               No           Diversifier     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       30 to 60               No           AgroPastoralist 0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       30 to 60               No           AgroPastoralist 3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       30 to 60               No           AgroPastoralist 6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       30 to 60               No           AgroPastoralist 9 to 21.5 
+		   0.1666667,   0.1666667,   0.5,         0.1666667,    // MoreThan30Perc       30 to 60               Yes          Subsistence     0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       30 to 60               Yes          Subsistence     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       30 to 60               Yes          Subsistence     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       30 to 60               Yes          Subsistence     9 to 21.5 
+		   0.2,         0.2,         0.4,         0.2,          // MoreThan30Perc       30 to 60               Yes          Diversifier     0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       30 to 60               Yes          Diversifier     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       30 to 60               Yes          Diversifier     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       30 to 60               Yes          Diversifier     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       30 to 60               Yes          AgroPastoralist 0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       30 to 60               Yes          AgroPastoralist 3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       30 to 60               Yes          AgroPastoralist 6 to 9    
+		   0.2,         0.2,         0.2,         0.4,          // MoreThan30Perc       30 to 60               Yes          AgroPastoralist 9 to 21.5 
+		   0.3333333,   0.3333333,   0.1666667,   0.1666667,    // MoreThan30Perc       60 to 100              No           Subsistence     0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       60 to 100              No           Subsistence     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       60 to 100              No           Subsistence     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       60 to 100              No           Subsistence     9 to 21.5 
+		   0.125,       0.25,        0.25,        0.375,        // MoreThan30Perc       60 to 100              No           Diversifier     0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       60 to 100              No           Diversifier     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       60 to 100              No           Diversifier     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       60 to 100              No           Diversifier     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       60 to 100              No           AgroPastoralist 0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       60 to 100              No           AgroPastoralist 3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       60 to 100              No           AgroPastoralist 6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       60 to 100              No           AgroPastoralist 9 to 21.5 
+		   0.2222222,   0.2222222,   0.3333333,   0.2222222,    // MoreThan30Perc       60 to 100              Yes          Subsistence     0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       60 to 100              Yes          Subsistence     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       60 to 100              Yes          Subsistence     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       60 to 100              Yes          Subsistence     9 to 21.5 
+		   0.2,         0.2,         0.2,         0.4,          // MoreThan30Perc       60 to 100              Yes          Diversifier     0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       60 to 100              Yes          Diversifier     3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       60 to 100              Yes          Diversifier     6 to 9    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       60 to 100              Yes          Diversifier     9 to 21.5 
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       60 to 100              Yes          AgroPastoralist 0 to 3    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       60 to 100              Yes          AgroPastoralist 3 to 6    
+		   0.25,        0.25,        0.25,        0.25,         // MoreThan30Perc       60 to 100              Yes          AgroPastoralist 6 to 9    
+		   0.25,        0.25,        0.25,        0.25);        // MoreThan30Perc       60 to 100              Yes          AgroPastoralist 9 to 21.5 ;
+	numcases = 
+		                 // percentNonfarmIncome commercializationIndex creditaccess farmType        farmSize  
+		  (23,           // None                 0 to 30                No           Subsistence     0 to 3    
+		   5,            // None                 0 to 30                No           Subsistence     3 to 6    
+		   5,            // None                 0 to 30                No           Subsistence     6 to 9    
+		   4,            // None                 0 to 30                No           Subsistence     9 to 21.5 
+		   10,           // None                 0 to 30                No           Diversifier     0 to 3    
+		   6,            // None                 0 to 30                No           Diversifier     3 to 6    
+		   5,            // None                 0 to 30                No           Diversifier     6 to 9    
+		   5,            // None                 0 to 30                No           Diversifier     9 to 21.5 
+		   4,            // None                 0 to 30                No           AgroPastoralist 0 to 3    
+		   5,            // None                 0 to 30                No           AgroPastoralist 3 to 6    
+		   8,            // None                 0 to 30                No           AgroPastoralist 6 to 9    
+		   5,            // None                 0 to 30                No           AgroPastoralist 9 to 21.5 
+		   8,            // None                 0 to 30                Yes          Subsistence     0 to 3    
+		   7,            // None                 0 to 30                Yes          Subsistence     3 to 6    
+		   4,            // None                 0 to 30                Yes          Subsistence     6 to 9    
+		   5,            // None                 0 to 30                Yes          Subsistence     9 to 21.5 
+		   9,            // None                 0 to 30                Yes          Diversifier     0 to 3    
+		   5,            // None                 0 to 30                Yes          Diversifier     3 to 6    
+		   5,            // None                 0 to 30                Yes          Diversifier     6 to 9    
+		   4,            // None                 0 to 30                Yes          Diversifier     9 to 21.5 
+		   4,            // None                 0 to 30                Yes          AgroPastoralist 0 to 3    
+		   4,            // None                 0 to 30                Yes          AgroPastoralist 3 to 6    
+		   5,            // None                 0 to 30                Yes          AgroPastoralist 6 to 9    
+		   5,            // None                 0 to 30                Yes          AgroPastoralist 9 to 21.5 
+		   37,           // None                 30 to 60               No           Subsistence     0 to 3    
+		   9,            // None                 30 to 60               No           Subsistence     3 to 6    
+		   4,            // None                 30 to 60               No           Subsistence     6 to 9    
+		   4,            // None                 30 to 60               No           Subsistence     9 to 21.5 
+		   19,           // None                 30 to 60               No           Diversifier     0 to 3    
+		   7,            // None                 30 to 60               No           Diversifier     3 to 6    
+		   5,            // None                 30 to 60               No           Diversifier     6 to 9    
+		   4,            // None                 30 to 60               No           Diversifier     9 to 21.5 
+		   4,            // None                 30 to 60               No           AgroPastoralist 0 to 3    
+		   4,            // None                 30 to 60               No           AgroPastoralist 3 to 6    
+		   7,            // None                 30 to 60               No           AgroPastoralist 6 to 9    
+		   5,            // None                 30 to 60               No           AgroPastoralist 9 to 21.5 
+		   20,           // None                 30 to 60               Yes          Subsistence     0 to 3    
+		   8,            // None                 30 to 60               Yes          Subsistence     3 to 6    
+		   4,            // None                 30 to 60               Yes          Subsistence     6 to 9    
+		   4,            // None                 30 to 60               Yes          Subsistence     9 to 21.5 
+		   6,            // None                 30 to 60               Yes          Diversifier     0 to 3    
+		   5,            // None                 30 to 60               Yes          Diversifier     3 to 6    
+		   4,            // None                 30 to 60               Yes          Diversifier     6 to 9    
+		   4,            // None                 30 to 60               Yes          Diversifier     9 to 21.5 
+		   4,            // None                 30 to 60               Yes          AgroPastoralist 0 to 3    
+		   4,            // None                 30 to 60               Yes          AgroPastoralist 3 to 6    
+		   4,            // None                 30 to 60               Yes          AgroPastoralist 6 to 9    
+		   5,            // None                 30 to 60               Yes          AgroPastoralist 9 to 21.5 
+		   29,           // None                 60 to 100              No           Subsistence     0 to 3    
+		   10,           // None                 60 to 100              No           Subsistence     3 to 6    
+		   4,            // None                 60 to 100              No           Subsistence     6 to 9    
+		   4,            // None                 60 to 100              No           Subsistence     9 to 21.5 
+		   13,           // None                 60 to 100              No           Diversifier     0 to 3    
+		   5,            // None                 60 to 100              No           Diversifier     3 to 6    
+		   5,            // None                 60 to 100              No           Diversifier     6 to 9    
+		   4,            // None                 60 to 100              No           Diversifier     9 to 21.5 
+		   4,            // None                 60 to 100              No           AgroPastoralist 0 to 3    
+		   4,            // None                 60 to 100              No           AgroPastoralist 3 to 6    
+		   5,            // None                 60 to 100              No           AgroPastoralist 6 to 9    
+		   6,            // None                 60 to 100              No           AgroPastoralist 9 to 21.5 
+		   25,           // None                 60 to 100              Yes          Subsistence     0 to 3    
+		   6,            // None                 60 to 100              Yes          Subsistence     3 to 6    
+		   4,            // None                 60 to 100              Yes          Subsistence     6 to 9    
+		   4,            // None                 60 to 100              Yes          Subsistence     9 to 21.5 
+		   8,            // None                 60 to 100              Yes          Diversifier     0 to 3    
+		   6,            // None                 60 to 100              Yes          Diversifier     3 to 6    
+		   4,            // None                 60 to 100              Yes          Diversifier     6 to 9    
+		   4,            // None                 60 to 100              Yes          Diversifier     9 to 21.5 
+		   4,            // None                 60 to 100              Yes          AgroPastoralist 0 to 3    
+		   4,            // None                 60 to 100              Yes          AgroPastoralist 3 to 6    
+		   5,            // None                 60 to 100              Yes          AgroPastoralist 6 to 9    
+		   4,            // None                 60 to 100              Yes          AgroPastoralist 9 to 21.5 
+		   5,            // LessThan30Perc       0 to 30                No           Subsistence     0 to 3    
+		   7,            // LessThan30Perc       0 to 30                No           Subsistence     3 to 6    
+		   4,            // LessThan30Perc       0 to 30                No           Subsistence     6 to 9    
+		   4,            // LessThan30Perc       0 to 30                No           Subsistence     9 to 21.5 
+		   6,            // LessThan30Perc       0 to 30                No           Diversifier     0 to 3    
+		   4,            // LessThan30Perc       0 to 30                No           Diversifier     3 to 6    
+		   5,            // LessThan30Perc       0 to 30                No           Diversifier     6 to 9    
+		   4,            // LessThan30Perc       0 to 30                No           Diversifier     9 to 21.5 
+		   4,            // LessThan30Perc       0 to 30                No           AgroPastoralist 0 to 3    
+		   4,            // LessThan30Perc       0 to 30                No           AgroPastoralist 3 to 6    
+		   4,            // LessThan30Perc       0 to 30                No           AgroPastoralist 6 to 9    
+		   4,            // LessThan30Perc       0 to 30                No           AgroPastoralist 9 to 21.5 
+		   6,            // LessThan30Perc       0 to 30                Yes          Subsistence     0 to 3    
+		   6,            // LessThan30Perc       0 to 30                Yes          Subsistence     3 to 6    
+		   4,            // LessThan30Perc       0 to 30                Yes          Subsistence     6 to 9    
+		   4,            // LessThan30Perc       0 to 30                Yes          Subsistence     9 to 21.5 
+		   6,            // LessThan30Perc       0 to 30                Yes          Diversifier     0 to 3    
+		   4,            // LessThan30Perc       0 to 30                Yes          Diversifier     3 to 6    
+		   4,            // LessThan30Perc       0 to 30                Yes          Diversifier     6 to 9    
+		   4,            // LessThan30Perc       0 to 30                Yes          Diversifier     9 to 21.5 
+		   4,            // LessThan30Perc       0 to 30                Yes          AgroPastoralist 0 to 3    
+		   4,            // LessThan30Perc       0 to 30                Yes          AgroPastoralist 3 to 6    
+		   4,            // LessThan30Perc       0 to 30                Yes          AgroPastoralist 6 to 9    
+		   4,            // LessThan30Perc       0 to 30                Yes          AgroPastoralist 9 to 21.5 
+		   14,           // LessThan30Perc       30 to 60               No           Subsistence     0 to 3    
+		   6,            // LessThan30Perc       30 to 60               No           Subsistence     3 to 6    
+		   5,            // LessThan30Perc       30 to 60               No           Subsistence     6 to 9    
+		   4,            // LessThan30Perc       30 to 60               No           Subsistence     9 to 21.5 
+		   9,            // LessThan30Perc       30 to 60               No           Diversifier     0 to 3    
+		   5,            // LessThan30Perc       30 to 60               No           Diversifier     3 to 6    
+		   4,            // LessThan30Perc       30 to 60               No           Diversifier     6 to 9    
+		   4,            // LessThan30Perc       30 to 60               No           Diversifier     9 to 21.5 
+		   4,            // LessThan30Perc       30 to 60               No           AgroPastoralist 0 to 3    
+		   4,            // LessThan30Perc       30 to 60               No           AgroPastoralist 3 to 6    
+		   4,            // LessThan30Perc       30 to 60               No           AgroPastoralist 6 to 9    
+		   5,            // LessThan30Perc       30 to 60               No           AgroPastoralist 9 to 21.5 
+		   8,            // LessThan30Perc       30 to 60               Yes          Subsistence     0 to 3    
+		   4,            // LessThan30Perc       30 to 60               Yes          Subsistence     3 to 6    
+		   4,            // LessThan30Perc       30 to 60               Yes          Subsistence     6 to 9    
+		   4,            // LessThan30Perc       30 to 60               Yes          Subsistence     9 to 21.5 
+		   4,            // LessThan30Perc       30 to 60               Yes          Diversifier     0 to 3    
+		   4,            // LessThan30Perc       30 to 60               Yes          Diversifier     3 to 6    
+		   4,            // LessThan30Perc       30 to 60               Yes          Diversifier     6 to 9    
+		   4,            // LessThan30Perc       30 to 60               Yes          Diversifier     9 to 21.5 
+		   4,            // LessThan30Perc       30 to 60               Yes          AgroPastoralist 0 to 3    
+		   4,            // LessThan30Perc       30 to 60               Yes          AgroPastoralist 3 to 6    
+		   4,            // LessThan30Perc       30 to 60               Yes          AgroPastoralist 6 to 9    
+		   4,            // LessThan30Perc       30 to 60               Yes          AgroPastoralist 9 to 21.5 
+		   7,            // LessThan30Perc       60 to 100              No           Subsistence     0 to 3    
+		   6,            // LessThan30Perc       60 to 100              No           Subsistence     3 to 6    
+		   4,            // LessThan30Perc       60 to 100              No           Subsistence     6 to 9    
+		   4,            // LessThan30Perc       60 to 100              No           Subsistence     9 to 21.5 
+		   6,            // LessThan30Perc       60 to 100              No           Diversifier     0 to 3    
+		   4,            // LessThan30Perc       60 to 100              No           Diversifier     3 to 6    
+		   4,            // LessThan30Perc       60 to 100              No           Diversifier     6 to 9    
+		   4,            // LessThan30Perc       60 to 100              No           Diversifier     9 to 21.5 
+		   4,            // LessThan30Perc       60 to 100              No           AgroPastoralist 0 to 3    
+		   4,            // LessThan30Perc       60 to 100              No           AgroPastoralist 3 to 6    
+		   4,            // LessThan30Perc       60 to 100              No           AgroPastoralist 6 to 9    
+		   4,            // LessThan30Perc       60 to 100              No           AgroPastoralist 9 to 21.5 
+		   5,            // LessThan30Perc       60 to 100              Yes          Subsistence     0 to 3    
+		   7,            // LessThan30Perc       60 to 100              Yes          Subsistence     3 to 6    
+		   4,            // LessThan30Perc       60 to 100              Yes          Subsistence     6 to 9    
+		   4,            // LessThan30Perc       60 to 100              Yes          Subsistence     9 to 21.5 
+		   4,            // LessThan30Perc       60 to 100              Yes          Diversifier     0 to 3    
+		   4,            // LessThan30Perc       60 to 100              Yes          Diversifier     3 to 6    
+		   4,            // LessThan30Perc       60 to 100              Yes          Diversifier     6 to 9    
+		   4,            // LessThan30Perc       60 to 100              Yes          Diversifier     9 to 21.5 
+		   4,            // LessThan30Perc       60 to 100              Yes          AgroPastoralist 0 to 3    
+		   4,            // LessThan30Perc       60 to 100              Yes          AgroPastoralist 3 to 6    
+		   4,            // LessThan30Perc       60 to 100              Yes          AgroPastoralist 6 to 9    
+		   5,            // LessThan30Perc       60 to 100              Yes          AgroPastoralist 9 to 21.5 
+		   5,            // MoreThan30Perc       0 to 30                No           Subsistence     0 to 3    
+		   5,            // MoreThan30Perc       0 to 30                No           Subsistence     3 to 6    
+		   4,            // MoreThan30Perc       0 to 30                No           Subsistence     6 to 9    
+		   4,            // MoreThan30Perc       0 to 30                No           Subsistence     9 to 21.5 
+		   4,            // MoreThan30Perc       0 to 30                No           Diversifier     0 to 3    
+		   5,            // MoreThan30Perc       0 to 30                No           Diversifier     3 to 6    
+		   4,            // MoreThan30Perc       0 to 30                No           Diversifier     6 to 9    
+		   4,            // MoreThan30Perc       0 to 30                No           Diversifier     9 to 21.5 
+		   4,            // MoreThan30Perc       0 to 30                No           AgroPastoralist 0 to 3    
+		   5,            // MoreThan30Perc       0 to 30                No           AgroPastoralist 3 to 6    
+		   4,            // MoreThan30Perc       0 to 30                No           AgroPastoralist 6 to 9    
+		   4,            // MoreThan30Perc       0 to 30                No           AgroPastoralist 9 to 21.5 
+		   4,            // MoreThan30Perc       0 to 30                Yes          Subsistence     0 to 3    
+		   4,            // MoreThan30Perc       0 to 30                Yes          Subsistence     3 to 6    
+		   4,            // MoreThan30Perc       0 to 30                Yes          Subsistence     6 to 9    
+		   4,            // MoreThan30Perc       0 to 30                Yes          Subsistence     9 to 21.5 
+		   5,            // MoreThan30Perc       0 to 30                Yes          Diversifier     0 to 3    
+		   5,            // MoreThan30Perc       0 to 30                Yes          Diversifier     3 to 6    
+		   4,            // MoreThan30Perc       0 to 30                Yes          Diversifier     6 to 9    
+		   4,            // MoreThan30Perc       0 to 30                Yes          Diversifier     9 to 21.5 
+		   4,            // MoreThan30Perc       0 to 30                Yes          AgroPastoralist 0 to 3    
+		   4,            // MoreThan30Perc       0 to 30                Yes          AgroPastoralist 3 to 6    
+		   4,            // MoreThan30Perc       0 to 30                Yes          AgroPastoralist 6 to 9    
+		   4,            // MoreThan30Perc       0 to 30                Yes          AgroPastoralist 9 to 21.5 
+		   10,           // MoreThan30Perc       30 to 60               No           Subsistence     0 to 3    
+		   6,            // MoreThan30Perc       30 to 60               No           Subsistence     3 to 6    
+		   4,            // MoreThan30Perc       30 to 60               No           Subsistence     6 to 9    
+		   4,            // MoreThan30Perc       30 to 60               No           Subsistence     9 to 21.5 
+		   5,            // MoreThan30Perc       30 to 60               No           Diversifier     0 to 3    
+		   5,            // MoreThan30Perc       30 to 60               No           Diversifier     3 to 6    
+		   4,            // MoreThan30Perc       30 to 60               No           Diversifier     6 to 9    
+		   4,            // MoreThan30Perc       30 to 60               No           Diversifier     9 to 21.5 
+		   4,            // MoreThan30Perc       30 to 60               No           AgroPastoralist 0 to 3    
+		   4,            // MoreThan30Perc       30 to 60               No           AgroPastoralist 3 to 6    
+		   4,            // MoreThan30Perc       30 to 60               No           AgroPastoralist 6 to 9    
+		   4,            // MoreThan30Perc       30 to 60               No           AgroPastoralist 9 to 21.5 
+		   6,            // MoreThan30Perc       30 to 60               Yes          Subsistence     0 to 3    
+		   4,            // MoreThan30Perc       30 to 60               Yes          Subsistence     3 to 6    
+		   4,            // MoreThan30Perc       30 to 60               Yes          Subsistence     6 to 9    
+		   4,            // MoreThan30Perc       30 to 60               Yes          Subsistence     9 to 21.5 
+		   5,            // MoreThan30Perc       30 to 60               Yes          Diversifier     0 to 3    
+		   4,            // MoreThan30Perc       30 to 60               Yes          Diversifier     3 to 6    
+		   4,            // MoreThan30Perc       30 to 60               Yes          Diversifier     6 to 9    
+		   4,            // MoreThan30Perc       30 to 60               Yes          Diversifier     9 to 21.5 
+		   4,            // MoreThan30Perc       30 to 60               Yes          AgroPastoralist 0 to 3    
+		   4,            // MoreThan30Perc       30 to 60               Yes          AgroPastoralist 3 to 6    
+		   4,            // MoreThan30Perc       30 to 60               Yes          AgroPastoralist 6 to 9    
+		   5,            // MoreThan30Perc       30 to 60               Yes          AgroPastoralist 9 to 21.5 
+		   6,            // MoreThan30Perc       60 to 100              No           Subsistence     0 to 3    
+		   4,            // MoreThan30Perc       60 to 100              No           Subsistence     3 to 6    
+		   4,            // MoreThan30Perc       60 to 100              No           Subsistence     6 to 9    
+		   4,            // MoreThan30Perc       60 to 100              No           Subsistence     9 to 21.5 
+		   8,            // MoreThan30Perc       60 to 100              No           Diversifier     0 to 3    
+		   4,            // MoreThan30Perc       60 to 100              No           Diversifier     3 to 6    
+		   4,            // MoreThan30Perc       60 to 100              No           Diversifier     6 to 9    
+		   4,            // MoreThan30Perc       60 to 100              No           Diversifier     9 to 21.5 
+		   4,            // MoreThan30Perc       60 to 100              No           AgroPastoralist 0 to 3    
+		   4,            // MoreThan30Perc       60 to 100              No           AgroPastoralist 3 to 6    
+		   4,            // MoreThan30Perc       60 to 100              No           AgroPastoralist 6 to 9    
+		   4,            // MoreThan30Perc       60 to 100              No           AgroPastoralist 9 to 21.5 
+		   9,            // MoreThan30Perc       60 to 100              Yes          Subsistence     0 to 3    
+		   4,            // MoreThan30Perc       60 to 100              Yes          Subsistence     3 to 6    
+		   4,            // MoreThan30Perc       60 to 100              Yes          Subsistence     6 to 9    
+		   4,            // MoreThan30Perc       60 to 100              Yes          Subsistence     9 to 21.5 
+		   5,            // MoreThan30Perc       60 to 100              Yes          Diversifier     0 to 3    
+		   4,            // MoreThan30Perc       60 to 100              Yes          Diversifier     3 to 6    
+		   4,            // MoreThan30Perc       60 to 100              Yes          Diversifier     6 to 9    
+		   4,            // MoreThan30Perc       60 to 100              Yes          Diversifier     9 to 21.5 
+		   4,            // MoreThan30Perc       60 to 100              Yes          AgroPastoralist 0 to 3    
+		   4,            // MoreThan30Perc       60 to 100              Yes          AgroPastoralist 3 to 6    
+		   4,            // MoreThan30Perc       60 to 100              Yes          AgroPastoralist 6 to 9    
+		   4);           // MoreThan30Perc       60 to 100              Yes          AgroPastoralist 9 to 21.5 ;
+	title = "PerCapitaIncome";
+	whenchanged = 1494835308;
+	belief = (0.275209, 0.2588812, 0.2454634, 0.2204463);
+	visual V3 {
+		center = (858, 456);
+		height = 4;
+		link 2 {
+			path = ((1009, 302), (907, 406));
+			};
+		};
+	};
+
+node topgraphicWetnessIndex {
+	kind = NATURE;
+	discrete = FALSE;
+	chance = CHANCE;
+	levels = (14.3, 17.9, 23, 32);
+	parents = ();
+	probs = 
+		// 14.3 to 17.9 17.9 to 23   23 to 32     
+		  (0.3433333,   0.3233333,   0.3333333);
+	numcases = 300;
+	title = "TopgraphicWetnessIndex";
+	whenchanged = 1494835308;
+	belief = (0.3433333, 0.3233333, 0.3333333);
+	visual V3 {
+		center = (150, 480);
+		height = 6;
+		};
+	};
+
+node cropChoice {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (RiceAndMaize, RiceMaizeAndVegit, Rice, VegitAndMaize, VegitAndRice, Maize, Vegitables);
+	parents = (totalLaborManDays, topgraphicWetnessIndex, shareOfHiredLabour, farmType);
+	probs = 
+		// RiceAndMaize RiceMaizeAndVegi Rice     VegitAndMaize VegitAndRice Maize       Vegitables    // totalLaborManDays topgraphicWetnessIndex shareOfHiredLabour farmType        
+		  (0.125,       0.125,       0.25,        0.125,       0.125,       0.125,       0.125,        // 10 to 120         14.3 to 17.9           0 to 10            Subsistence     
+		   0.3333333,   0.1111111,   0.1111111,   0.1111111,   0.1111111,   0.1111111,   0.1111111,    // 10 to 120         14.3 to 17.9           0 to 10            Diversifier     
+		   0.25,        0.125,       0.125,       0.125,       0.125,       0.125,       0.125,        // 10 to 120         14.3 to 17.9           0 to 10            AgroPastoralist 
+		   0.09090909,  0.09090909,  0.4545455,   0.09090909,  0.09090909,  0.09090909,  0.09090909,   // 10 to 120         14.3 to 17.9           10 to 60           Subsistence     
+		   0.4285714,   0.2142857,   0.07142857,  0.07142857,  0.07142857,  0.07142857,  0.07142857,   // 10 to 120         14.3 to 17.9           10 to 60           Diversifier     
+		   0.25,        0.125,       0.125,       0.125,       0.125,       0.125,       0.125,        // 10 to 120         14.3 to 17.9           10 to 60           AgroPastoralist 
+		   0.2666667,   0.06666667,  0.3333333,   0.06666667,  0.1333333,   0.06666667,  0.06666667,   // 10 to 120         14.3 to 17.9           60 to 100          Subsistence     
+		   0.2,         0.1,         0.1,         0.1,         0.3,         0.1,         0.1,          // 10 to 120         14.3 to 17.9           60 to 100          Diversifier     
+		   0.2727273,   0.09090909,  0.1818182,   0.09090909,  0.1818182,   0.09090909,  0.09090909,   // 10 to 120         14.3 to 17.9           60 to 100          AgroPastoralist 
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 10 to 120         17.9 to 23             0 to 10            Subsistence     
+		   0.3333333,   0.1111111,   0.1111111,   0.1111111,   0.1111111,   0.1111111,   0.1111111,    // 10 to 120         17.9 to 23             0 to 10            Diversifier     
+		   0.3333333,   0.1111111,   0.1111111,   0.1111111,   0.1111111,   0.1111111,   0.1111111,    // 10 to 120         17.9 to 23             0 to 10            AgroPastoralist 
+		   0.3076923,   0.07692308,  0.3076923,   0.07692308,  0.07692308,  0.07692308,  0.07692308,   // 10 to 120         17.9 to 23             10 to 60           Subsistence     
+		   0.25,        0.125,       0.125,       0.125,       0.125,       0.125,       0.125,        // 10 to 120         17.9 to 23             10 to 60           Diversifier     
+		   0.25,        0.125,       0.125,       0.125,       0.125,       0.125,       0.125,        // 10 to 120         17.9 to 23             10 to 60           AgroPastoralist 
+		   0.1333333,   0.06666667,  0.4666667,   0.06666667,  0.1333333,   0.06666667,  0.06666667,   // 10 to 120         17.9 to 23             60 to 100          Subsistence     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 10 to 120         17.9 to 23             60 to 100          Diversifier     
+		   0.25,        0.125,       0.125,       0.125,       0.125,       0.125,       0.125,        // 10 to 120         17.9 to 23             60 to 100          AgroPastoralist 
+		   0.2,         0.1,         0.3,         0.1,         0.1,         0.1,         0.1,          // 10 to 120         23 to 32               0 to 10            Subsistence     
+		   0.25,        0.125,       0.125,       0.125,       0.125,       0.125,       0.125,        // 10 to 120         23 to 32               0 to 10            Diversifier     
+		   0.25,        0.125,       0.125,       0.125,       0.125,       0.125,       0.125,        // 10 to 120         23 to 32               0 to 10            AgroPastoralist 
+		   0.1666667,   0.08333334,  0.4166667,   0.08333334,  0.08333334,  0.08333334,  0.08333334,   // 10 to 120         23 to 32               10 to 60           Subsistence     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 10 to 120         23 to 32               10 to 60           Diversifier     
+		   0.1111111,   0.1111111,   0.3333333,   0.1111111,   0.1111111,   0.1111111,   0.1111111,    // 10 to 120         23 to 32               10 to 60           AgroPastoralist 
+		   0.1666667,   0.08333334,  0.3333333,   0.08333334,  0.1666667,   0.08333334,  0.08333334,   // 10 to 120         23 to 32               60 to 100          Subsistence     
+		   0.125,       0.25,        0.125,       0.125,       0.125,       0.125,       0.125,        // 10 to 120         23 to 32               60 to 100          Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 10 to 120         23 to 32               60 to 100          AgroPastoralist 
+		   0.2727273,   0.09090909,  0.2727273,   0.09090909,  0.09090909,  0.09090909,  0.09090909,   // 120 to 220        14.3 to 17.9           0 to 10            Subsistence     
+		   0.2727273,   0.2727273,   0.09090909,  0.09090909,  0.09090909,  0.09090909,  0.09090909,   // 120 to 220        14.3 to 17.9           0 to 10            Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 120 to 220        14.3 to 17.9           0 to 10            AgroPastoralist 
+		   0.2,         0.1,         0.3,         0.1,         0.1,         0.1,         0.1,          // 120 to 220        14.3 to 17.9           10 to 60           Subsistence     
+		   0.3333333,   0.1666667,   0.08333334,  0.1666667,   0.08333334,  0.08333334,  0.08333334,   // 120 to 220        14.3 to 17.9           10 to 60           Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 120 to 220        14.3 to 17.9           10 to 60           AgroPastoralist 
+		   0.1818182,   0.09090909,  0.2727273,   0.09090909,  0.1818182,   0.09090909,  0.09090909,   // 120 to 220        14.3 to 17.9           60 to 100          Subsistence     
+		   0.2,         0.2,         0.1,         0.1,         0.2,         0.1,         0.1,          // 120 to 220        14.3 to 17.9           60 to 100          Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 120 to 220        14.3 to 17.9           60 to 100          AgroPastoralist 
+		   0.09090909,  0.09090909,  0.4545455,   0.09090909,  0.09090909,  0.09090909,  0.09090909,   // 120 to 220        17.9 to 23             0 to 10            Subsistence     
+		   0.3,         0.1,         0.2,         0.1,         0.1,         0.1,         0.1,          // 120 to 220        17.9 to 23             0 to 10            Diversifier     
+		   0.2,         0.2,         0.2,         0.1,         0.1,         0.1,         0.1,          // 120 to 220        17.9 to 23             0 to 10            AgroPastoralist 
+		   0.06666667,  0.06666667,  0.6,         0.06666667,  0.06666667,  0.06666667,  0.06666667,   // 120 to 220        17.9 to 23             10 to 60           Subsistence     
+		   0.2222222,   0.2222222,   0.1111111,   0.1111111,   0.1111111,   0.1111111,   0.1111111,    // 120 to 220        17.9 to 23             10 to 60           Diversifier     
+		   0.125,       0.125,       0.25,        0.125,       0.125,       0.125,       0.125,        // 120 to 220        17.9 to 23             10 to 60           AgroPastoralist 
+		   0.1666667,   0.08333334,  0.4166667,   0.08333334,  0.08333334,  0.08333334,  0.08333334,   // 120 to 220        17.9 to 23             60 to 100          Subsistence     
+		   0.25,        0.125,       0.125,       0.125,       0.125,       0.125,       0.125,        // 120 to 220        17.9 to 23             60 to 100          Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 120 to 220        17.9 to 23             60 to 100          AgroPastoralist 
+		   0.07692308,  0.07692308,  0.5384616,   0.07692308,  0.07692308,  0.07692308,  0.07692308,   // 120 to 220        23 to 32               0 to 10            Subsistence     
+		   0.5384616,   0.07692308,  0.07692308,  0.07692308,  0.07692308,  0.07692308,  0.07692308,   // 120 to 220        23 to 32               0 to 10            Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 120 to 220        23 to 32               0 to 10            AgroPastoralist 
+		   0.2307692,   0.07692308,  0.3076923,   0.07692308,  0.1538462,   0.07692308,  0.07692308,   // 120 to 220        23 to 32               10 to 60           Subsistence     
+		   0.2,         0.2,         0.1,         0.1,         0.2,         0.1,         0.1,          // 120 to 220        23 to 32               10 to 60           Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 120 to 220        23 to 32               10 to 60           AgroPastoralist 
+		   0.2666667,   0.06666667,  0.4,         0.06666667,  0.06666667,  0.06666667,  0.06666667,   // 120 to 220        23 to 32               60 to 100          Subsistence     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 120 to 220        23 to 32               60 to 100          Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 120 to 220        23 to 32               60 to 100          AgroPastoralist 
+		   0.2142857,   0.07142857,  0.4285714,   0.07142857,  0.07142857,  0.07142857,  0.07142857,   // 220 to 400        14.3 to 17.9           0 to 10            Subsistence     
+		   0.2727273,   0.09090909,  0.09090909,  0.09090909,  0.09090909,  0.2727273,   0.09090909,   // 220 to 400        14.3 to 17.9           0 to 10            Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 220 to 400        14.3 to 17.9           0 to 10            AgroPastoralist 
+		   0.1333333,   0.06666667,  0.4666667,   0.06666667,  0.1333333,   0.06666667,  0.06666667,   // 220 to 400        14.3 to 17.9           10 to 60           Subsistence     
+		   0.4,         0.1,         0.1,         0.1,         0.1,         0.1,         0.1,          // 220 to 400        14.3 to 17.9           10 to 60           Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 220 to 400        14.3 to 17.9           10 to 60           AgroPastoralist 
+		   0.2,         0.1,         0.2,         0.1,         0.2,         0.1,         0.1,          // 220 to 400        14.3 to 17.9           60 to 100          Subsistence     
+		   0.2,         0.1,         0.1,         0.1,         0.1,         0.2,         0.2,          // 220 to 400        14.3 to 17.9           60 to 100          Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 220 to 400        14.3 to 17.9           60 to 100          AgroPastoralist 
+		   0.09090909,  0.09090909,  0.4545455,   0.09090909,  0.09090909,  0.09090909,  0.09090909,   // 220 to 400        17.9 to 23             0 to 10            Subsistence     
+		   0.4,         0.1,         0.1,         0.1,         0.1,         0.1,         0.1,          // 220 to 400        17.9 to 23             0 to 10            Diversifier     
+		   0.25,        0.125,       0.125,       0.125,       0.125,       0.125,       0.125,        // 220 to 400        17.9 to 23             0 to 10            AgroPastoralist 
+		   0.09090909,  0.09090909,  0.4545455,   0.09090909,  0.09090909,  0.09090909,  0.09090909,   // 220 to 400        17.9 to 23             10 to 60           Subsistence     
+		   0.2222222,   0.1111111,   0.1111111,   0.1111111,   0.2222222,   0.1111111,   0.1111111,    // 220 to 400        17.9 to 23             10 to 60           Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 220 to 400        17.9 to 23             10 to 60           AgroPastoralist 
+		   0.1111111,   0.1111111,   0.3333333,   0.1111111,   0.1111111,   0.1111111,   0.1111111,    // 220 to 400        17.9 to 23             60 to 100          Subsistence     
+		   0.2222222,   0.2222222,   0.1111111,   0.1111111,   0.1111111,   0.1111111,   0.1111111,    // 220 to 400        17.9 to 23             60 to 100          Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 220 to 400        17.9 to 23             60 to 100          AgroPastoralist 
+		   0.1666667,   0.08333334,  0.4166667,   0.08333334,  0.08333334,  0.08333334,  0.08333334,   // 220 to 400        23 to 32               0 to 10            Subsistence     
+		   0.2222222,   0.1111111,   0.1111111,   0.1111111,   0.1111111,   0.2222222,   0.1111111,    // 220 to 400        23 to 32               0 to 10            Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 220 to 400        23 to 32               0 to 10            AgroPastoralist 
+		   0.05882353,  0.05882353,  0.5882353,   0.05882353,  0.1176471,   0.05882353,  0.05882353,   // 220 to 400        23 to 32               10 to 60           Subsistence     
+		   0.125,       0.25,        0.125,       0.125,       0.125,       0.125,       0.125,        // 220 to 400        23 to 32               10 to 60           Diversifier     
+		   0.25,        0.125,       0.125,       0.125,       0.125,       0.125,       0.125,        // 220 to 400        23 to 32               10 to 60           AgroPastoralist 
+		   0.2142857,   0.07142857,  0.4285714,   0.07142857,  0.07142857,  0.07142857,  0.07142857,   // 220 to 400        23 to 32               60 to 100          Subsistence     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 220 to 400        23 to 32               60 to 100          Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 220 to 400        23 to 32               60 to 100          AgroPastoralist 
+		   0.1428571,   0.1428571,   0.4285714,   0.07142857,  0.07142857,  0.07142857,  0.07142857,   // 400 to 2760       14.3 to 17.9           0 to 10            Subsistence     
+		   0.2,         0.2,         0.1,         0.1,         0.2,         0.1,         0.1,          // 400 to 2760       14.3 to 17.9           0 to 10            Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 400 to 2760       14.3 to 17.9           0 to 10            AgroPastoralist 
+		   0.1,         0.1,         0.2,         0.1,         0.3,         0.1,         0.1,          // 400 to 2760       14.3 to 17.9           10 to 60           Subsistence     
+		   0.3,         0.1,         0.1,         0.1,         0.1,         0.2,         0.1,          // 400 to 2760       14.3 to 17.9           10 to 60           Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 400 to 2760       14.3 to 17.9           10 to 60           AgroPastoralist 
+		   0.1,         0.2,         0.1,         0.1,         0.3,         0.1,         0.1,          // 400 to 2760       14.3 to 17.9           60 to 100          Subsistence     
+		   0.25,        0.125,       0.125,       0.125,       0.125,       0.125,       0.125,        // 400 to 2760       14.3 to 17.9           60 to 100          Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 400 to 2760       14.3 to 17.9           60 to 100          AgroPastoralist 
+		   0.0625,      0.0625,      0.625,       0.0625,      0.0625,      0.0625,      0.0625,       // 400 to 2760       17.9 to 23             0 to 10            Subsistence     
+		   0.1818182,   0.3636364,   0.09090909,  0.09090909,  0.09090909,  0.09090909,  0.09090909,   // 400 to 2760       17.9 to 23             0 to 10            Diversifier     
+		   0.2222222,   0.1111111,   0.2222222,   0.1111111,   0.1111111,   0.1111111,   0.1111111,    // 400 to 2760       17.9 to 23             0 to 10            AgroPastoralist 
+		   0.08333334,  0.08333334,  0.4166667,   0.08333334,  0.1666667,   0.08333334,  0.08333334,   // 400 to 2760       17.9 to 23             10 to 60           Subsistence     
+		   0.25,        0.125,       0.125,       0.125,       0.125,       0.125,       0.125,        // 400 to 2760       17.9 to 23             10 to 60           Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 400 to 2760       17.9 to 23             10 to 60           AgroPastoralist 
+		   0.25,        0.125,       0.375,       0.0625,      0.0625,      0.0625,      0.0625,       // 400 to 2760       17.9 to 23             60 to 100          Subsistence     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 400 to 2760       17.9 to 23             60 to 100          Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 400 to 2760       17.9 to 23             60 to 100          AgroPastoralist 
+		   0.1875,      0.0625,      0.4375,      0.0625,      0.125,       0.0625,      0.0625,       // 400 to 2760       23 to 32               0 to 10            Subsistence     
+		   0.3636364,   0.09090909,  0.09090909,  0.09090909,  0.1818182,   0.09090909,  0.09090909,   // 400 to 2760       23 to 32               0 to 10            Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 400 to 2760       23 to 32               0 to 10            AgroPastoralist 
+		   0.1666667,   0.08333334,  0.4166667,   0.08333334,  0.08333334,  0.08333334,  0.08333334,   // 400 to 2760       23 to 32               10 to 60           Subsistence     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 400 to 2760       23 to 32               10 to 60           Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 400 to 2760       23 to 32               10 to 60           AgroPastoralist 
+		   0.2857143,   0.07142857,  0.3571429,   0.07142857,  0.07142857,  0.07142857,  0.07142857,   // 400 to 2760       23 to 32               60 to 100          Subsistence     
+		   0.125,       0.25,        0.125,       0.125,       0.125,       0.125,       0.125,        // 400 to 2760       23 to 32               60 to 100          Diversifier     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571);   // 400 to 2760       23 to 32               60 to 100          AgroPastoralist ;
+	numcases = 
+		                 // totalLaborManDays topgraphicWetnessIndex shareOfHiredLabour farmType        
+		  (8,            // 10 to 120         14.3 to 17.9           0 to 10            Subsistence     
+		   9,            // 10 to 120         14.3 to 17.9           0 to 10            Diversifier     
+		   8,            // 10 to 120         14.3 to 17.9           0 to 10            AgroPastoralist 
+		   11,           // 10 to 120         14.3 to 17.9           10 to 60           Subsistence     
+		   14,           // 10 to 120         14.3 to 17.9           10 to 60           Diversifier     
+		   8,            // 10 to 120         14.3 to 17.9           10 to 60           AgroPastoralist 
+		   15,           // 10 to 120         14.3 to 17.9           60 to 100          Subsistence     
+		   10,           // 10 to 120         14.3 to 17.9           60 to 100          Diversifier     
+		   11,           // 10 to 120         14.3 to 17.9           60 to 100          AgroPastoralist 
+		   7,            // 10 to 120         17.9 to 23             0 to 10            Subsistence     
+		   9,            // 10 to 120         17.9 to 23             0 to 10            Diversifier     
+		   9,            // 10 to 120         17.9 to 23             0 to 10            AgroPastoralist 
+		   13,           // 10 to 120         17.9 to 23             10 to 60           Subsistence     
+		   8,            // 10 to 120         17.9 to 23             10 to 60           Diversifier     
+		   8,            // 10 to 120         17.9 to 23             10 to 60           AgroPastoralist 
+		   15,           // 10 to 120         17.9 to 23             60 to 100          Subsistence     
+		   7,            // 10 to 120         17.9 to 23             60 to 100          Diversifier     
+		   8,            // 10 to 120         17.9 to 23             60 to 100          AgroPastoralist 
+		   10,           // 10 to 120         23 to 32               0 to 10            Subsistence     
+		   8,            // 10 to 120         23 to 32               0 to 10            Diversifier     
+		   8,            // 10 to 120         23 to 32               0 to 10            AgroPastoralist 
+		   12,           // 10 to 120         23 to 32               10 to 60           Subsistence     
+		   7,            // 10 to 120         23 to 32               10 to 60           Diversifier     
+		   9,            // 10 to 120         23 to 32               10 to 60           AgroPastoralist 
+		   12,           // 10 to 120         23 to 32               60 to 100          Subsistence     
+		   8,            // 10 to 120         23 to 32               60 to 100          Diversifier     
+		   7,            // 10 to 120         23 to 32               60 to 100          AgroPastoralist 
+		   11,           // 120 to 220        14.3 to 17.9           0 to 10            Subsistence     
+		   11,           // 120 to 220        14.3 to 17.9           0 to 10            Diversifier     
+		   7,            // 120 to 220        14.3 to 17.9           0 to 10            AgroPastoralist 
+		   10,           // 120 to 220        14.3 to 17.9           10 to 60           Subsistence     
+		   12,           // 120 to 220        14.3 to 17.9           10 to 60           Diversifier     
+		   7,            // 120 to 220        14.3 to 17.9           10 to 60           AgroPastoralist 
+		   11,           // 120 to 220        14.3 to 17.9           60 to 100          Subsistence     
+		   10,           // 120 to 220        14.3 to 17.9           60 to 100          Diversifier     
+		   7,            // 120 to 220        14.3 to 17.9           60 to 100          AgroPastoralist 
+		   11,           // 120 to 220        17.9 to 23             0 to 10            Subsistence     
+		   10,           // 120 to 220        17.9 to 23             0 to 10            Diversifier     
+		   10,           // 120 to 220        17.9 to 23             0 to 10            AgroPastoralist 
+		   15,           // 120 to 220        17.9 to 23             10 to 60           Subsistence     
+		   9,            // 120 to 220        17.9 to 23             10 to 60           Diversifier     
+		   8,            // 120 to 220        17.9 to 23             10 to 60           AgroPastoralist 
+		   12,           // 120 to 220        17.9 to 23             60 to 100          Subsistence     
+		   8,            // 120 to 220        17.9 to 23             60 to 100          Diversifier     
+		   7,            // 120 to 220        17.9 to 23             60 to 100          AgroPastoralist 
+		   13,           // 120 to 220        23 to 32               0 to 10            Subsistence     
+		   13,           // 120 to 220        23 to 32               0 to 10            Diversifier     
+		   7,            // 120 to 220        23 to 32               0 to 10            AgroPastoralist 
+		   13,           // 120 to 220        23 to 32               10 to 60           Subsistence     
+		   10,           // 120 to 220        23 to 32               10 to 60           Diversifier     
+		   7,            // 120 to 220        23 to 32               10 to 60           AgroPastoralist 
+		   15,           // 120 to 220        23 to 32               60 to 100          Subsistence     
+		   7,            // 120 to 220        23 to 32               60 to 100          Diversifier     
+		   7,            // 120 to 220        23 to 32               60 to 100          AgroPastoralist 
+		   14,           // 220 to 400        14.3 to 17.9           0 to 10            Subsistence     
+		   11,           // 220 to 400        14.3 to 17.9           0 to 10            Diversifier     
+		   7,            // 220 to 400        14.3 to 17.9           0 to 10            AgroPastoralist 
+		   15,           // 220 to 400        14.3 to 17.9           10 to 60           Subsistence     
+		   10,           // 220 to 400        14.3 to 17.9           10 to 60           Diversifier     
+		   7,            // 220 to 400        14.3 to 17.9           10 to 60           AgroPastoralist 
+		   10,           // 220 to 400        14.3 to 17.9           60 to 100          Subsistence     
+		   10,           // 220 to 400        14.3 to 17.9           60 to 100          Diversifier     
+		   7,            // 220 to 400        14.3 to 17.9           60 to 100          AgroPastoralist 
+		   11,           // 220 to 400        17.9 to 23             0 to 10            Subsistence     
+		   10,           // 220 to 400        17.9 to 23             0 to 10            Diversifier     
+		   8,            // 220 to 400        17.9 to 23             0 to 10            AgroPastoralist 
+		   11,           // 220 to 400        17.9 to 23             10 to 60           Subsistence     
+		   9,            // 220 to 400        17.9 to 23             10 to 60           Diversifier     
+		   7,            // 220 to 400        17.9 to 23             10 to 60           AgroPastoralist 
+		   9,            // 220 to 400        17.9 to 23             60 to 100          Subsistence     
+		   9,            // 220 to 400        17.9 to 23             60 to 100          Diversifier     
+		   7,            // 220 to 400        17.9 to 23             60 to 100          AgroPastoralist 
+		   12,           // 220 to 400        23 to 32               0 to 10            Subsistence     
+		   9,            // 220 to 400        23 to 32               0 to 10            Diversifier     
+		   7,            // 220 to 400        23 to 32               0 to 10            AgroPastoralist 
+		   17,           // 220 to 400        23 to 32               10 to 60           Subsistence     
+		   8,            // 220 to 400        23 to 32               10 to 60           Diversifier     
+		   8,            // 220 to 400        23 to 32               10 to 60           AgroPastoralist 
+		   14,           // 220 to 400        23 to 32               60 to 100          Subsistence     
+		   7,            // 220 to 400        23 to 32               60 to 100          Diversifier     
+		   7,            // 220 to 400        23 to 32               60 to 100          AgroPastoralist 
+		   14,           // 400 to 2760       14.3 to 17.9           0 to 10            Subsistence     
+		   10,           // 400 to 2760       14.3 to 17.9           0 to 10            Diversifier     
+		   7,            // 400 to 2760       14.3 to 17.9           0 to 10            AgroPastoralist 
+		   10,           // 400 to 2760       14.3 to 17.9           10 to 60           Subsistence     
+		   10,           // 400 to 2760       14.3 to 17.9           10 to 60           Diversifier     
+		   7,            // 400 to 2760       14.3 to 17.9           10 to 60           AgroPastoralist 
+		   10,           // 400 to 2760       14.3 to 17.9           60 to 100          Subsistence     
+		   8,            // 400 to 2760       14.3 to 17.9           60 to 100          Diversifier     
+		   7,            // 400 to 2760       14.3 to 17.9           60 to 100          AgroPastoralist 
+		   16,           // 400 to 2760       17.9 to 23             0 to 10            Subsistence     
+		   11,           // 400 to 2760       17.9 to 23             0 to 10            Diversifier     
+		   9,            // 400 to 2760       17.9 to 23             0 to 10            AgroPastoralist 
+		   12,           // 400 to 2760       17.9 to 23             10 to 60           Subsistence     
+		   8,            // 400 to 2760       17.9 to 23             10 to 60           Diversifier     
+		   7,            // 400 to 2760       17.9 to 23             10 to 60           AgroPastoralist 
+		   16,           // 400 to 2760       17.9 to 23             60 to 100          Subsistence     
+		   7,            // 400 to 2760       17.9 to 23             60 to 100          Diversifier     
+		   7,            // 400 to 2760       17.9 to 23             60 to 100          AgroPastoralist 
+		   16,           // 400 to 2760       23 to 32               0 to 10            Subsistence     
+		   11,           // 400 to 2760       23 to 32               0 to 10            Diversifier     
+		   7,            // 400 to 2760       23 to 32               0 to 10            AgroPastoralist 
+		   12,           // 400 to 2760       23 to 32               10 to 60           Subsistence     
+		   7,            // 400 to 2760       23 to 32               10 to 60           Diversifier     
+		   7,            // 400 to 2760       23 to 32               10 to 60           AgroPastoralist 
+		   14,           // 400 to 2760       23 to 32               60 to 100          Subsistence     
+		   8,            // 400 to 2760       23 to 32               60 to 100          Diversifier     
+		   7);           // 400 to 2760       23 to 32               60 to 100          AgroPastoralist ;
+	title = "CropChoice";
+	whenchanged = 1494835308;
+	belief = (0.1873063, 0.1133318, 0.2839558, 0.09689962, 0.1213906, 0.1002197, 0.09689621);
+	visual V3 {
+		center = (492, 468);
+		height = 5;
+		};
+	};
+
+node ageOfTheHouseholdHead {
+	kind = NATURE;
+	discrete = FALSE;
+	chance = CHANCE;
+	levels = (24, 35, 45, 55, 88);
+	parents = ();
+	probs = 
+		// 24 to 35     35 to 45     45 to 55     55 to 88     
+		  (0.1627907,   0.3222591,   0.2757475,   0.2392027);
+	numcases = 301;
+	whenchanged = 1494835308;
+	belief = (0.1627907, 0.3222591, 0.2757475, 0.2392026);
+	visual V3 {
+		center = (162, 90);
+		height = 11;
+		};
+	};
+
+node intensificationStrategies {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (None, CropMultipleTimes, ApplyFertilizer, ApplyImprovedSeed, UseIrrigationAndFertilizerAppl, UseIrrigation);
+	statetitles = (, , , , "UseIrrigationAndFertilizerApplication", );
+	parents = (ageOfTheHouseholdHead, perCapitaIncome, cropChoice);
+	probs = 
+		// None         CropMultipleTime ApplyFertilizer ApplyImprovedSee UseIrrigationAnd UseIrrigation  // ageOfTheHouseholdHead perCapitaIncome cropChoice       
+		  (0.1428571,   0.2857143,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 24 to 35              Low             RiceAndMaize     
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 24 to 35              Low             RiceMaizeAndVegi 
+		   0.5,         0.07142857,  0.1428571,   0.1428571,   0.07142857,  0.07142857,   // 24 to 35              Low             Rice             
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 24 to 35              Low             VegitAndMaize    
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 24 to 35              Low             VegitAndRice     
+		   0.1428571,   0.2857143,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 24 to 35              Low             Maize            
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.2857143,   0.1428571,    // 24 to 35              Low             Vegitables       
+		   0.5,         0.1,         0.1,         0.1,         0.1,         0.1,          // 24 to 35              High            RiceAndMaize     
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.2857143,   0.1428571,    // 24 to 35              High            RiceMaizeAndVegi 
+		   0.5714286,   0.07142857,  0.1428571,   0.07142857,  0.07142857,  0.07142857,   // 24 to 35              High            Rice             
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 24 to 35              High            VegitAndMaize    
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 24 to 35              High            VegitAndRice     
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 24 to 35              High            Maize            
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 24 to 35              High            Vegitables       
+		   0.2,         0.4,         0.1,         0.1,         0.1,         0.1,          // 24 to 35              veryHigh        RiceAndMaize     
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 24 to 35              veryHigh        RiceMaizeAndVegi 
+		   0.5,         0.08333334,  0.1666667,   0.08333334,  0.08333334,  0.08333334,   // 24 to 35              veryHigh        Rice             
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 24 to 35              veryHigh        VegitAndMaize    
+		   0.25,        0.125,       0.125,       0.125,       0.25,        0.125,        // 24 to 35              veryHigh        VegitAndRice     
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 24 to 35              veryHigh        Maize            
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 24 to 35              veryHigh        Vegitables       
+		   0.2727273,   0.09090909,  0.1818182,   0.2727273,   0.09090909,  0.09090909,   // 24 to 35              Rich            RiceAndMaize     
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 24 to 35              Rich            RiceMaizeAndVegi 
+		   0.4166667,   0.08333334,  0.1666667,   0.1666667,   0.08333334,  0.08333334,   // 24 to 35              Rich            Rice             
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 24 to 35              Rich            VegitAndMaize    
+		   0.1428571,   0.1428571,   0.1428571,   0.2857143,   0.1428571,   0.1428571,    // 24 to 35              Rich            VegitAndRice     
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 24 to 35              Rich            Maize            
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 24 to 35              Rich            Vegitables       
+		   0.5454546,   0.09090909,  0.09090909,  0.09090909,  0.09090909,  0.09090909,   // 35 to 45              Low             RiceAndMaize     
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 35 to 45              Low             RiceMaizeAndVegi 
+		   0.6315789,   0.05263158,  0.05263158,  0.05263158,  0.05263158,  0.1578947,    // 35 to 45              Low             Rice             
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 35 to 45              Low             VegitAndMaize    
+		   0.2857143,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 35 to 45              Low             VegitAndRice     
+		   0.2857143,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 35 to 45              Low             Maize            
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 35 to 45              Low             Vegitables       
+		   0.4615385,   0.07692308,  0.1538462,   0.07692308,  0.1538462,   0.07692308,   // 35 to 45              High            RiceAndMaize     
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 35 to 45              High            RiceMaizeAndVegi 
+		   0.4761905,   0.0952381,   0.04761905,  0.1904762,   0.0952381,   0.0952381,    // 35 to 45              High            Rice             
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 35 to 45              High            VegitAndMaize    
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 35 to 45              High            VegitAndRice     
+		   0.2857143,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 35 to 45              High            Maize            
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 35 to 45              High            Vegitables       
+		   0.375,       0.125,       0.1875,      0.1875,      0.0625,      0.0625,       // 35 to 45              veryHigh        RiceAndMaize     
+		   0.125,       0.25,        0.125,       0.125,       0.25,        0.125,        // 35 to 45              veryHigh        RiceMaizeAndVegi 
+		   0.4,         0.05,        0.05,        0.35,        0.1,         0.05,         // 35 to 45              veryHigh        Rice             
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 35 to 45              veryHigh        VegitAndMaize    
+		   0.25,        0.25,        0.125,       0.125,       0.125,       0.125,        // 35 to 45              veryHigh        VegitAndRice     
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 35 to 45              veryHigh        Maize            
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 35 to 45              veryHigh        Vegitables       
+		   0.3333333,   0.08333334,  0.25,        0.1666667,   0.08333334,  0.08333334,   // 35 to 45              Rich            RiceAndMaize     
+		   0.2857143,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 35 to 45              Rich            RiceMaizeAndVegi 
+		   0.4761905,   0.0952381,   0.04761905,  0.1428571,   0.1904762,   0.04761905,   // 35 to 45              Rich            Rice             
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 35 to 45              Rich            VegitAndMaize    
+		   0.3333333,   0.1111111,   0.2222222,   0.1111111,   0.1111111,   0.1111111,    // 35 to 45              Rich            VegitAndRice     
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 35 to 45              Rich            Maize            
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 35 to 45              Rich            Vegitables       
+		   0.2727273,   0.2727273,   0.09090909,  0.1818182,   0.09090909,  0.09090909,   // 45 to 55              Low             RiceAndMaize     
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 45 to 55              Low             RiceMaizeAndVegi 
+		   0.6,         0.05,        0.15,        0.05,        0.1,         0.05,         // 45 to 55              Low             Rice             
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 45 to 55              Low             VegitAndMaize    
+		   0.125,       0.125,       0.25,        0.125,       0.25,        0.125,        // 45 to 55              Low             VegitAndRice     
+		   0.2857143,   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 45 to 55              Low             Maize            
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 45 to 55              Low             Vegitables       
+		   0.4545455,   0.09090909,  0.09090909,  0.1818182,   0.09090909,  0.09090909,   // 45 to 55              High            RiceAndMaize     
+		   0.2222222,   0.2222222,   0.1111111,   0.1111111,   0.2222222,   0.1111111,    // 45 to 55              High            RiceMaizeAndVegi 
+		   0.6153846,   0.07692308,  0.07692308,  0.07692308,  0.07692308,  0.07692308,   // 45 to 55              High            Rice             
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 45 to 55              High            VegitAndMaize    
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.2857143,   0.1428571,    // 45 to 55              High            VegitAndRice     
+		   0.1428571,   0.2857143,   0.1428571,   0.1428571,   0.1428571,   0.1428571,    // 45 to 55              High            Maize            
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 45 to 55              High            Vegitables       
+		   0.5555556,   0.1111111,   0.1111111,   0.1111111,   0.05555556,  0.05555556,   // 45 to 55              veryHigh        RiceAndMaize     
+		   0.1428571,   0.1428571,   0.2857143,   0.1428571,   0.1428571,   0.1428571,    // 45 to 55              veryHigh        RiceMaizeAndVegi 
+		   0.5,         0.07142857,  0.07142857,  0.07142857,  0.07142857,  0.2142857,    // 45 to 55              veryHigh        Rice             
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 45 to 55              veryHigh        VegitAndMaize    
+		   0.25,        0.125,       0.125,       0.25,        0.125,       0.125,        // 45 to 55              veryHigh        VegitAndRice     
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 45 to 55              veryHigh        Maize            
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 45 to 55              veryHigh        Vegitables       
+		   0.4,         0.1333333,   0.2,         0.06666667,  0.1333333,   0.06666667,   // 45 to 55              Rich            RiceAndMaize     
+		   0.1111111,   0.1111111,   0.2222222,   0.1111111,   0.3333333,   0.1111111,    // 45 to 55              Rich            RiceMaizeAndVegi 
+		   0.4285714,   0.07142857,  0.07142857,  0.1428571,   0.07142857,  0.2142857,    // 45 to 55              Rich            Rice             
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 45 to 55              Rich            VegitAndMaize    
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 45 to 55              Rich            VegitAndRice     
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 45 to 55              Rich            Maize            
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 45 to 55              Rich            Vegitables       
+		   0.5384616,   0.1538462,   0.07692308,  0.07692308,  0.07692308,  0.07692308,   // 55 to 88              Low             RiceAndMaize     
+		   0.2222222,   0.1111111,   0.1111111,   0.2222222,   0.1111111,   0.2222222,    // 55 to 88              Low             RiceMaizeAndVegi 
+		   0.6666667,   0.06666667,  0.06666667,  0.06666667,  0.06666667,  0.06666667,   // 55 to 88              Low             Rice             
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 55 to 88              Low             VegitAndMaize    
+		   0.4444444,   0.1111111,   0.1111111,   0.1111111,   0.1111111,   0.1111111,    // 55 to 88              Low             VegitAndRice     
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 55 to 88              Low             Maize            
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 55 to 88              Low             Vegitables       
+		   0.3846154,   0.1538462,   0.07692308,  0.2307692,   0.07692308,  0.07692308,   // 55 to 88              High            RiceAndMaize     
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 55 to 88              High            RiceMaizeAndVegi 
+		   0.4375,      0.0625,      0.0625,      0.25,        0.0625,      0.125,        // 55 to 88              High            Rice             
+		   0.1428571,   0.1428571,   0.2857143,   0.1428571,   0.1428571,   0.1428571,    // 55 to 88              High            VegitAndMaize    
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.2857143,   0.1428571,    // 55 to 88              High            VegitAndRice     
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 55 to 88              High            Maize            
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 55 to 88              High            Vegitables       
+		   0.4,         0.2,         0.1,         0.1,         0.1,         0.1,          // 55 to 88              veryHigh        RiceAndMaize     
+		   0.1111111,   0.2222222,   0.2222222,   0.2222222,   0.1111111,   0.1111111,    // 55 to 88              veryHigh        RiceMaizeAndVegi 
+		   0.4,         0.1,         0.1,         0.1,         0.1,         0.2,          // 55 to 88              veryHigh        Rice             
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 55 to 88              veryHigh        VegitAndMaize    
+		   0.375,       0.125,       0.125,       0.125,       0.125,       0.125,        // 55 to 88              veryHigh        VegitAndRice     
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 55 to 88              veryHigh        Maize            
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 55 to 88              veryHigh        Vegitables       
+		   0.2,         0.2666667,   0.06666667,  0.2666667,   0.06666667,  0.1333333,    // 55 to 88              Rich            RiceAndMaize     
+		   0.3333333,   0.1111111,   0.1111111,   0.2222222,   0.1111111,   0.1111111,    // 55 to 88              Rich            RiceMaizeAndVegi 
+		   0.25,        0.125,       0.125,       0.125,       0.25,        0.125,        // 55 to 88              Rich            Rice             
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 55 to 88              Rich            VegitAndMaize    
+		   0.1428571,   0.1428571,   0.1428571,   0.1428571,   0.2857143,   0.1428571,    // 55 to 88              Rich            VegitAndRice     
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,    // 55 to 88              Rich            Maize            
+		   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667,   0.1666667);   // 55 to 88              Rich            Vegitables       ;
+	numcases = 
+		                 // ageOfTheHouseholdHead perCapitaIncome cropChoice       
+		  (7,            // 24 to 35              Low             RiceAndMaize     
+		   6,            // 24 to 35              Low             RiceMaizeAndVegi 
+		   14,           // 24 to 35              Low             Rice             
+		   6,            // 24 to 35              Low             VegitAndMaize    
+		   6,            // 24 to 35              Low             VegitAndRice     
+		   7,            // 24 to 35              Low             Maize            
+		   7,            // 24 to 35              Low             Vegitables       
+		   10,           // 24 to 35              High            RiceAndMaize     
+		   7,            // 24 to 35              High            RiceMaizeAndVegi 
+		   14,           // 24 to 35              High            Rice             
+		   6,            // 24 to 35              High            VegitAndMaize    
+		   6,            // 24 to 35              High            VegitAndRice     
+		   6,            // 24 to 35              High            Maize            
+		   6,            // 24 to 35              High            Vegitables       
+		   10,           // 24 to 35              veryHigh        RiceAndMaize     
+		   6,            // 24 to 35              veryHigh        RiceMaizeAndVegi 
+		   12,           // 24 to 35              veryHigh        Rice             
+		   6,            // 24 to 35              veryHigh        VegitAndMaize    
+		   8,            // 24 to 35              veryHigh        VegitAndRice     
+		   6,            // 24 to 35              veryHigh        Maize            
+		   6,            // 24 to 35              veryHigh        Vegitables       
+		   11,           // 24 to 35              Rich            RiceAndMaize     
+		   6,            // 24 to 35              Rich            RiceMaizeAndVegi 
+		   12,           // 24 to 35              Rich            Rice             
+		   6,            // 24 to 35              Rich            VegitAndMaize    
+		   7,            // 24 to 35              Rich            VegitAndRice     
+		   6,            // 24 to 35              Rich            Maize            
+		   6,            // 24 to 35              Rich            Vegitables       
+		   11,           // 35 to 45              Low             RiceAndMaize     
+		   6,            // 35 to 45              Low             RiceMaizeAndVegi 
+		   19,           // 35 to 45              Low             Rice             
+		   6,            // 35 to 45              Low             VegitAndMaize    
+		   7,            // 35 to 45              Low             VegitAndRice     
+		   7,            // 35 to 45              Low             Maize            
+		   6,            // 35 to 45              Low             Vegitables       
+		   13,           // 35 to 45              High            RiceAndMaize     
+		   6,            // 35 to 45              High            RiceMaizeAndVegi 
+		   21,           // 35 to 45              High            Rice             
+		   6,            // 35 to 45              High            VegitAndMaize    
+		   6,            // 35 to 45              High            VegitAndRice     
+		   7,            // 35 to 45              High            Maize            
+		   6,            // 35 to 45              High            Vegitables       
+		   16,           // 35 to 45              veryHigh        RiceAndMaize     
+		   8,            // 35 to 45              veryHigh        RiceMaizeAndVegi 
+		   20,           // 35 to 45              veryHigh        Rice             
+		   6,            // 35 to 45              veryHigh        VegitAndMaize    
+		   8,            // 35 to 45              veryHigh        VegitAndRice     
+		   6,            // 35 to 45              veryHigh        Maize            
+		   6,            // 35 to 45              veryHigh        Vegitables       
+		   12,           // 35 to 45              Rich            RiceAndMaize     
+		   7,            // 35 to 45              Rich            RiceMaizeAndVegi 
+		   21,           // 35 to 45              Rich            Rice             
+		   6,            // 35 to 45              Rich            VegitAndMaize    
+		   9,            // 35 to 45              Rich            VegitAndRice     
+		   6,            // 35 to 45              Rich            Maize            
+		   6,            // 35 to 45              Rich            Vegitables       
+		   11,           // 45 to 55              Low             RiceAndMaize     
+		   6,            // 45 to 55              Low             RiceMaizeAndVegi 
+		   20,           // 45 to 55              Low             Rice             
+		   6,            // 45 to 55              Low             VegitAndMaize    
+		   8,            // 45 to 55              Low             VegitAndRice     
+		   7,            // 45 to 55              Low             Maize            
+		   6,            // 45 to 55              Low             Vegitables       
+		   11,           // 45 to 55              High            RiceAndMaize     
+		   9,            // 45 to 55              High            RiceMaizeAndVegi 
+		   13,           // 45 to 55              High            Rice             
+		   6,            // 45 to 55              High            VegitAndMaize    
+		   7,            // 45 to 55              High            VegitAndRice     
+		   7,            // 45 to 55              High            Maize            
+		   6,            // 45 to 55              High            Vegitables       
+		   18,           // 45 to 55              veryHigh        RiceAndMaize     
+		   7,            // 45 to 55              veryHigh        RiceMaizeAndVegi 
+		   14,           // 45 to 55              veryHigh        Rice             
+		   6,            // 45 to 55              veryHigh        VegitAndMaize    
+		   8,            // 45 to 55              veryHigh        VegitAndRice     
+		   6,            // 45 to 55              veryHigh        Maize            
+		   6,            // 45 to 55              veryHigh        Vegitables       
+		   15,           // 45 to 55              Rich            RiceAndMaize     
+		   9,            // 45 to 55              Rich            RiceMaizeAndVegi 
+		   14,           // 45 to 55              Rich            Rice             
+		   6,            // 45 to 55              Rich            VegitAndMaize    
+		   6,            // 45 to 55              Rich            VegitAndRice     
+		   6,            // 45 to 55              Rich            Maize            
+		   6,            // 45 to 55              Rich            Vegitables       
+		   13,           // 55 to 88              Low             RiceAndMaize     
+		   9,            // 55 to 88              Low             RiceMaizeAndVegi 
+		   15,           // 55 to 88              Low             Rice             
+		   6,            // 55 to 88              Low             VegitAndMaize    
+		   9,            // 55 to 88              Low             VegitAndRice     
+		   6,            // 55 to 88              Low             Maize            
+		   6,            // 55 to 88              Low             Vegitables       
+		   13,           // 55 to 88              High            RiceAndMaize     
+		   6,            // 55 to 88              High            RiceMaizeAndVegi 
+		   16,           // 55 to 88              High            Rice             
+		   7,            // 55 to 88              High            VegitAndMaize    
+		   7,            // 55 to 88              High            VegitAndRice     
+		   6,            // 55 to 88              High            Maize            
+		   6,            // 55 to 88              High            Vegitables       
+		   10,           // 55 to 88              veryHigh        RiceAndMaize     
+		   9,            // 55 to 88              veryHigh        RiceMaizeAndVegi 
+		   10,           // 55 to 88              veryHigh        Rice             
+		   6,            // 55 to 88              veryHigh        VegitAndMaize    
+		   8,            // 55 to 88              veryHigh        VegitAndRice     
+		   6,            // 55 to 88              veryHigh        Maize            
+		   6,            // 55 to 88              veryHigh        Vegitables       
+		   15,           // 55 to 88              Rich            RiceAndMaize     
+		   9,            // 55 to 88              Rich            RiceMaizeAndVegi 
+		   8,            // 55 to 88              Rich            Rice             
+		   6,            // 55 to 88              Rich            VegitAndMaize    
+		   7,            // 55 to 88              Rich            VegitAndRice     
+		   6,            // 55 to 88              Rich            Maize            
+		   6);           // 55 to 88              Rich            Vegitables       ;
+	title = "ChoiceOfIntensificationStrategy";
+	whenchanged = 1494835308;
+	belief = (0.3152883, 0.1366048, 0.1350869, 0.1488266, 0.1354077, 0.1287857);
+	visual V3 {
+		center = (654, 774);
+		height = 15;
+		link 1 {
+			path = ((82, 141), (18, 180), (18, 774), (518, 774));
+			};
+		};
+	};
+NodeSet farmersdecisions {Nodes = (intensificationStrategies, cropChoice);};
+ElimOrder = (wardCode, distanceToBigMarket, ageOfTheHouseholdHead, topgraphicWetnessIndex, percentNonfarmIncome, creditaccess, intensificationStrategies, householdSize, perCapitaIncome, commercializationIndex, farmType, shareOfHiredLabour, farmSize, totalLaborManDays, cropChoice);
+};
